@@ -1,0 +1,49 @@
+#
+# Copyright (c) 2022, NVIDIA CORPORATION.  All rights reserved.
+#
+# NVIDIA CORPORATION and its licensors retain all intellectual property
+# and proprietary rights in and to this software, related documentation
+# and any modifications thereto.  Any use, reproduction, disclosure or
+# distribution of this software and related documentation without an express
+# license agreement from NVIDIA CORPORATION is strictly prohibited.
+#
+
+POLLING_INTERVAL 2
+
+<FAN 1>
+	TMARGIN DISABLED
+	FAN_GOVERNOR cont {
+		STEP_SIZE 10
+	}
+	FAN_CONTROL close_loop {
+		RPM_TOLERANCE 100
+	}
+	FAN_PROFILE quiet {
+		#TEMP 	HYST	PWM	RPM
+		0	0	0	0
+		30	0	60	1800
+		45	0	120	3000
+		64	0	200	4500
+		65	0	255	6000
+		105	0	255	6000
+	}
+	FAN_PROFILE cool {
+		#TEMP 	HYST	PWM	RPM
+		0	0	0	0
+		64	0	200	4500
+		65	0	255	6000
+		105	0	255	6000
+	}
+	THERMAL_GROUP 0 {
+		GROUP_MAX_TEMP 105
+		#Thermal-Zone Coeffs Max-Temp
+		CPU-therm 20,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 0
+		GPU-therm 20,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 0
+		SOC0-therm 20,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 0
+		SOC1-therm 20,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 0
+		SOC2-therm 20,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 0
+	}
+	FAN_DEFAULT_CONTROL close_loop
+	FAN_DEFAULT_PROFILE quiet
+	FAN_DEFAULT_GOVERNOR cont
+	KICKSTART_PWM 64
