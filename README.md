@@ -2,6 +2,14 @@
 
 Technical research and findings from production edge AI deployments on constrained hardware.
 
+## Contact Me
+
+Have questions about these findings or interested in edge AI consulting? Get in touch:
+
+📧 **Email:** [ahkt808@proton.me](mailto:ahkt808@proton.me)
+
+---
+
 ## Papers
 
 ### 1. Vision-Language Models on Edge Hardware: JetPack 7.2 Deployment Patterns
