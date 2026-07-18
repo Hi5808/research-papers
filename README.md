@@ -81,16 +81,17 @@ Seven concrete bugs found while building a 7-model IT-operations diagnostic suit
 
 ---
 
-### 5. Does Domain-Specialist Fine-Tuning Beat a Generalist? An Evaluation Methodology Fix and a Domain-Dependent Answer
+### 5. Does Domain-Specialist Fine-Tuning Beat a Generalist? Evaluation Depth, Training Data Depth, and a Reversal
 
-Testing whether narrow domain fine-tuning outperforms a generalist model of the same size (1.5B) across four IT-operations domains. The answer changed twice as the evaluation methodology improved — from a broken exact-keyword test, to a corrected-but-shallow judge-based test finding no effect, to a deeper judge-based test revealing a real but domain-dependent effect (specialist wins on Windows, generalist wins on networking, ties elsewhere).
+Testing whether narrow domain fine-tuning outperforms a generalist model of the same size (1.5B) across four IT-operations domains. The answer changed three times: a broken exact-keyword test, a corrected-but-shallow judge-based test finding no effect, a deeper judge-based test revealing a domain-dependent effect — and a final experiment showing that adding deep multi-hop *training* scenarios (not just eval scenarios) reversed the one domain where the generalist had been winning into the domain with the strongest specialist advantage measured in the whole project.
 
 **Key findings:**
 - Exact-keyword test matching produces false negatives on genuinely correct answers using valid alternative implementations
 - 3-question smoke tests produce non-reproducible pass/fail results from LLM sampling variance alone, even at low temperature
 - LLM-as-judge scoring with a single-dimension rubric + Wilson confidence intervals recovers a statistically honest comparison
 - Test *depth*, not just sample size, determines whether an evaluation can detect a real effect — a shallow test set found nothing; adding multi-hop scenarios revealed a real, domain-dependent effect the shallow test was structurally incapable of surfacing
-- Result: specialization's effect is real but inconsistent across domains at 1.5B scale — not a clean win, not a clean non-effect, and the domain-dependence itself remains an open question
+- Adding 15 deep multi-hop *training* scenarios per domain reversed networking from a clear generalist win (70% pass) to a clear specialist win (85% pass, highest score in the project) — reframing "domain-dependence" as likely a training-data-depth confound rather than an intrinsic domain property
+- Final result: specialization's benefit depends on whether training data contains examples of the reasoning depth being evaluated for, not primarily on domain identity
 
 **Platform:** NVIDIA RTX 5090 32GB, AMD Ryzen 7 9700X | **Date:** July 2026
 
