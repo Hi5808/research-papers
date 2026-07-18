@@ -97,9 +97,30 @@ Testing whether narrow domain fine-tuning outperforms a generalist model of the 
 
 ---
 
+## Board Bring-Up and Recovery
+
+Hardware-level bring-up and recovery work: flashing tool regressions, device-discovery methodology, and OS provisioning under real-world constraints.
+
+### 6. Recovering a Rockchip RK3588 Board from Maskrom Under a Non-Elevated Windows Session: An Empirical Debugging Study
+
+Recovering a Radxa ROCK 5B+ from an unrecognized maskrom-mode USB state on a non-elevated Windows host — device discovery, non-elevated toolchain assembly, OS image selection, and a flashing-tool regression root-caused by diffing two closed-source binaries.
+
+**Key findings:**
+- A device-discovery query filtered on class and status structurally excluded the target device, which by definition has neither — a selection-effect bug, not a detection failure
+- RKDevTool v2.96's `err=995` write failure (a widely-reported, unresolved community bug) was root-caused via binary string-diffing against a working v2.86, with no source access or debugger, and corroborated against the tool's own logs
+- A USB-level mode-switch (maskrom → loader) does not survive `usbip` forwarding: the transition re-enumerates the device, which invalidates `usbipd`'s share state and hangs the transfer indefinitely
+- Vendor-official was the stalest OS option by ~2 years; freshness was checkable from release metadata in seconds, but the freshest OS then landed on the wrong side of a Python ABI break against the target SDK's wheels — freshness must be checked for mutual stack compatibility, not maximized per component
+- NPU/GPU/codec driver inclusion was confirmed directly from the shipped image's kernel config (no mount, no elevation) rather than from contradictory forum reports
+
+**Platform:** Radxa ROCK 5B+ (Rockchip RK3588) | **Date:** July 2026
+
+[Read full paper →](research_6_rk3588_maskrom_recovery.md)
+
+---
+
 ## About
 
-Papers 1-3 document research from production deployments on NVIDIA Jetson Orin Nano 8GB hardware, emphasizing practical systems-level challenges in edge AI deployment. Papers 4-5 document findings from building and evaluating a multi-model small-LLM fine-tuning pipeline, emphasizing failure modes that produce valid-looking but degraded artifacts, and the evaluation rigor required to trust A/B comparisons between fine-tuned models.
+Papers 1-3 document research from production deployments on NVIDIA Jetson Orin Nano 8GB hardware, emphasizing practical systems-level challenges in edge AI deployment. Papers 4-5 document findings from building and evaluating a multi-model small-LLM fine-tuning pipeline, emphasizing failure modes that produce valid-looking but degraded artifacts, and the evaluation rigor required to trust A/B comparisons between fine-tuned models. Paper 6 documents hardware-level board bring-up, covering device-discovery methodology and firmware-flashing tool regressions under real-world host constraints.
 
 ## Citation
 
