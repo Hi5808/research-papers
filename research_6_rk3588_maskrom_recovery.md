@@ -2,43 +2,50 @@
 
 ## Abstract
 
-We document the recovery and OS provisioning of a Radxa ROCK 5B+
-(Rockchip RK3588) that presented to a Windows 11 host as an
-unrecognized, driver-less maskrom-mode USB device. The work spans four
-independent problem domains — host-side device discovery, non-elevated
-toolchain assembly, OS image selection, and firmware-flashing tool
-regression diagnosis — each resolved through direct empirical evidence
-rather than documentation or forum consensus. The most consequential
-finding was methodological rather than technical: an initial USB device
-scan filtered on device class and status, predicates that structurally
-exclude any device defined by being in a failed state, causing the
-target hardware to be reported absent when it was physically present
-throughout. A second major finding root-caused a widely-reported,
-unresolved community bug (Rockchip's RKDevTool v2.96+ `err=995`
-regression) via binary string-diffing between working and broken tool
-versions, without source access or a debugger. We report the diagnostic
-procedure, the evidence discriminating between competing hypotheses at
-each step, and the final validated configuration, including a
-post-flash inspection of the shipped kernel image that surfaced a
-genuine SDK-compatibility blocker (Python 3.14 vs. RKNN toolkit wheels
-capped at cp312) before it could manifest as a confusing runtime
-failure.
+We document the recovery and OS provisioning of a brand-new Radxa ROCK 5B+
+(Rockchip RK3588) that arrived in an unknown initial state and presented to a 
+Windows 11 host as an unrecognized, driver-less maskrom-mode USB device. The recovery 
+outcome was uncertain: multiple independent failure points could have rendered the 
+device unrecoverable (tool regressions, driver-installation blocks, USB-level 
+incompatibilities), and the successful resolution converged on a narrow path 
+through a combination of systematic debugging and fortunate circumstance. 
+The work spans four independent problem domains — host-side device discovery, 
+non-elevated toolchain assembly, OS image selection, and firmware-flashing tool 
+regression diagnosis — each requiring direct empirical evidence rather than 
+documentation or forum consensus. The most consequential finding was methodological 
+rather than technical: an initial USB device scan filtered on device class and status, 
+predicates that structurally exclude any device defined by being in a failed state, 
+causing the target hardware to be reported absent when it was physically present 
+throughout. A second major finding root-caused a widely-reported, unresolved 
+community bug (Rockchip's RKDevTool v2.96+ `err=995` regression) via binary 
+string-diffing between working and broken tool versions, without source access or 
+a debugger. We report the full diagnostic procedure, the evidence discriminating 
+between competing hypotheses at each step, and the final validated configuration, 
+including a post-flash inspection that surfaced a genuine SDK-compatibility 
+blocker (Python 3.14 vs. RKNN toolkit wheels capped at cp312) before it could 
+manifest as a confusing runtime failure.
 
 ## 1. Introduction
 
 ### 1.1 Motivation
 
-Flashing a single-board computer from a non-elevated Windows session
-with no prior toolchain installed is a realistic constraint for many
-first-time bring-ups, not an artificial one — admin rights are commonly
-unavailable on managed or loaner machines. Under this constraint,
-failures that would be routine with elevated tooling (driver
-installation, package-manager installs) become hard boundaries requiring
-workarounds, and every diagnostic step must be justified without the
-convenience of reinstalling drivers or running arbitrary installers.
-This motivates documenting not just the working configuration but the
-full sequence of ruled-out approaches, since the non-elevated constraint
-changes which fixes are even available.
+A brand-new Radxa ROCK 5B+ arrived in an unknown initial state and presented 
+as an unrecognized maskrom-mode device. Recovery was uncertain: multiple 
+independent failure points in the toolchain, driver ecosystem, and firmware 
+compatibility could have resulted in total loss with no recovery path. This 
+work documents a successful recovery that converged through systematic 
+debugging and fortunate availability of working alternative toolchain components.
+
+Flashing from a non-elevated Windows session with no prior toolchain installed 
+is a realistic constraint for many first-time bring-ups, not an artificial one — 
+admin rights are commonly unavailable on managed or loaner machines. Under this 
+constraint, failures that would be routine with elevated tooling (driver 
+installation, package-manager installs) become hard boundaries requiring 
+workarounds, and every diagnostic step must be justified without the convenience 
+of reinstalling drivers or running arbitrary installers. This motivates documenting 
+not just the working configuration but the full sequence of ruled-out approaches, 
+since the non-elevated constraint changes which fixes are even available — and 
+in this case, some failure modes would have been unrecoverable regardless.
 
 ### 1.2 Target platform
 
@@ -402,11 +409,20 @@ not maximized independently per component.
 
 ## 5. Conclusion
 
-A Radxa ROCK 5B+ presenting as an unrecognized maskrom-mode device on a
-non-elevated Windows host was successfully recovered, flashed with
-Armbian 26.2.6 (vendor kernel 6.1.115, KDE Plasma), and confirmed
-booting to a functional, networked, SSH-accessible desktop. The three
-substantive technical obstacles along the way — a device-discovery
+A brand-new Radxa ROCK 5B+ arriving in an unknown initial state and presenting 
+as an unrecognized maskrom-mode device on a non-elevated Windows host was 
+successfully recovered, flashed with Armbian 26.2.6 (vendor kernel 6.1.115, 
+KDE Plasma), and confirmed booting to a functional, networked, SSH-accessible 
+desktop. This outcome was not inevitable: multiple independent failure points 
+along the path — tool regressions, driver-installation blocks, USB-level 
+incompatibilities — could have rendered recovery impossible. Success required 
+the convergence of systematic debugging with fortunate circumstance: a known-working 
+older tool version (RKDevTool v2.86) available as a fallback when v2.96 failed, 
+archive tooling installable under the non-elevated constraint, and a flashing 
+toolchain independent of OS choice, allowing course correction on the OS decision 
+after the toolchain succeeded.
+
+The three substantive technical obstacles along the way — a device-discovery
 query that structurally excluded its own target, a widely-reported
 firmware-flashing tool regression traced to a specific added code path
 via binary diffing with no source access, and a USB-mode-switching
