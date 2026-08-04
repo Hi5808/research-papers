@@ -138,9 +138,28 @@ An undocumented encoding in NVIDIA's `nvfancontrol` configuration causes fan-cur
 
 ---
 
+### 8. Characterizing an Unbranded NVMe SSD: The Dead Sensor and the Span-Dependent Cache
+
+A full non-destructive characterization of a 1 TB SSD of unknown provenance, performed in place as the live boot device of a Jetson Orin NX — covering what the firmware reports, what it gets wrong, and what only measurement reveals.
+
+**Key findings:**
+- The drive is untraceable — generic model string, placeholder serial, and a PCI subsystem ID identical to the device ID because no OEM ever programmed one — but the controller is positively identified as a DRAM-less Silicon Motion SM2263XT via two independent sources, with non-zero `HMPRE` settling the EN/XT ambiguity that pci.ids cannot
+- The drive's temperature sensor is **frozen**: one unchanging value across 9,191 samples and 2.8 hours of sustained load, while the SoC sensor logged into the same CSV moved through 191 distinct values. Its zeroed thermal counters are therefore not evidence of good thermal behaviour — they would read zero on a burning drive
+- Sustained sequential write holds 573 MB/s for exactly 107.8 GiB and then falls 4.01x to 143 MB/s as the SLC cache exhausts, at 39 °C — cache exhaustion, not throttling
+- 4K random read is span-dependent as a 64 MiB host-memory-buffer implies, but only mildly: a 300 GiB working set is ~20% slower than 64 GiB
+- ext4 costs 3.2% on sequential reads but **2.5x on 4K random reads** — the raw device delivered 269k IOPS against 109k through the filesystem, over a *larger* span, so span cannot explain it
+- The 128 KiB maximum I/O size is the *host's* limit, not the drive's: Identify reports `MDTS=6` (256 KiB), inverting the usual assumption that such caps are a drive property
+- The sampling harness built for this campaign was found to overstate throughput by 32% by dividing counter deltas by a nominal interval it never actually achieved — caught only because fio measured the same quantity independently, and revealed by peak samples that exceeded the drive's own PCIe link
+
+**Platform:** reComputer J4012 (Jetson Orin NX 16GB on a J401 carrier) | **Date:** August 2026
+
+[Read full paper →](research_8_nvme_characterization.md) · Raw data: [SLC write profile](data/nvme-20260804-slc-write-profile.csv) · [full sampler run](data/nvme-20260804-sampler-full-run.csv) · [SMART pre/post](data/nvme-20260804-smart-pre.json)
+
+---
+
 ## About
 
-Papers 1-3 document research from production deployments on a Seeed Studio reComputer J3011 (Jetson Orin Nano 8GB on a J401 carrier), emphasizing practical systems-level challenges in edge AI deployment. Papers 4-5 document findings from building and evaluating a multi-model small-LLM fine-tuning pipeline, emphasizing failure modes that produce valid-looking but degraded artifacts, and the evaluation rigor required to trust A/B comparisons between fine-tuned models. Paper 6 documents hardware-level board bring-up, covering device-discovery methodology and firmware-flashing tool regressions under real-world host constraints. Paper 7 returns to the Jetson platform at the thermal and power-management layer, documenting a configuration-encoding trap and the measurement discipline required for trustworthy thermal benchmarks.
+Papers 1-3 document research from production deployments on a Seeed Studio reComputer J3011 (Jetson Orin Nano 8GB on a J401 carrier), emphasizing practical systems-level challenges in edge AI deployment. Papers 4-5 document findings from building and evaluating a multi-model small-LLM fine-tuning pipeline, emphasizing failure modes that produce valid-looking but degraded artifacts, and the evaluation rigor required to trust A/B comparisons between fine-tuned models. Paper 6 documents hardware-level board bring-up, covering device-discovery methodology and firmware-flashing tool regressions under real-world host constraints. Paper 7 returns to the Jetson platform at the thermal and power-management layer, documenting a configuration-encoding trap and the measurement discipline required for trustworthy thermal benchmarks. Paper 8 extends that measurement discipline to storage, characterizing an unbranded NVMe SSD non-destructively on a live system and treating the instrument itself as something requiring validation.
 
 ## Citation
 

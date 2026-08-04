@@ -1,0 +1,1823 @@
+captured: 1969-12-31T15:38:49-10:00
+kernel: Linux orinnx 6.8.12-1021-tegra #1 SMP PREEMPT Thu Jun 18 12:30:05 UTC 2026 aarch64 aarch64 aarch64 GNU/Linux
+
+--- nvme supported-log-pages /dev/nvme0 -o json ---
+{
+  "error":"Invalid Log Page: The log page indicated is invalid",
+  "type":"nvme"
+}
+(unsupported or failed)
+
+--- nvme effects-log /dev/nvme0 -o json ---
+[
+  {
+    "command_set_identifier":0,
+    "admin_cmd_set":{
+      "ACS_0 (Delete I/O Submission Queue)":1,
+      "ACS_1 (Create I/O Submission Queue)":1,
+      "ACS_2 (Get Log Page)":1,
+      "ACS_4 (Delete I/O Completion Queue)":1,
+      "ACS_5 (Create I/O Completion Queue)":1,
+      "ACS_6 (Identify)":1,
+      "ACS_8 (Abort)":1,
+      "ACS_9 (Set Features)":1,
+      "ACS_10 (Get Features)":1,
+      "ACS_12 (Asynchronous Event Request)":1,
+      "ACS_16 (Firmware Commit)":17,
+      "ACS_17 (Firmware Image Download)":1,
+      "ACS_20 (Device Self-test)":1,
+      "ACS_128 (Format NVM)":7,
+      "ACS_129 (Security Send)":1,
+      "ACS_130 (Security Receive)":1,
+      "ACS_192 (Unknown)":9,
+      "ACS_193 (Unknown)":131073,
+      "ACS_194 (Unknown)":131073,
+      "ACS_196 (Unknown)":1,
+      "ACS_200 (Unknown)":1
+    },
+    "io_cmd_set":{
+      "IOCS_0 (Flush)":3,
+      "IOCS_1 (Write)":3,
+      "IOCS_2 (Read)":1,
+      "IOCS_9 (Dataset Management)":3
+    }
+  }
+]
+
+--- nvme id-ctrl /dev/nvme0 -H ---
+NVME Identify Controller:
+vid       : 0x126f
+ssvid     : 0x126f
+sn        : AA000000000000000073
+mn        : SSD 1TB                                 
+fr        : T1103N0L
+rab       : 6
+ieee      : 000001
+cmic      : 0
+  [3:3] : 0	ANA not supported
+  [2:2] : 0	PCI
+  [1:1] : 0	Single Controller
+  [0:0] : 0	Single Port
+
+mdts      : 6
+cntlid    : 0x1
+ver       : 0x10300
+rtd3r     : 0x186a0
+rtd3e     : 0x13880
+oaes      : 0x200
+  [31:31] : 0	Discovery Log Change Notice Not Supported
+  [27:27] : 0	Zone Descriptor Changed Notices Not Supported
+  [15:15] : 0	Normal NSS Shutdown Event Not Supported
+  [14:14] : 0	Endurance Group Event Aggregate Log Page Change Notice Not Supported
+  [13:13] : 0	LBA Status Information Notices Not Supported
+  [12:12] : 0	Predictable Latency Event Aggregate Log Change Notices Not Supported
+  [11:11] : 0	Asymmetric Namespace Access Change Notices Not Supported
+  [9:9] : 0x1	Firmware Activation Notices Supported
+  [8:8] : 0	Namespace Attribute Changed Event Not Supported
+
+ctratt    : 0
+  [19:19] : 0	Flexible Data Placement Not Supported
+  [15:15] : 0	Extended LBA Formats Not Supported
+  [14:14] : 0	Delete NVM Set Not Supported
+  [13:13] : 0	Delete Endurance Group Not Supported
+  [12:12] : 0	Variable Capacity Management Not Supported
+  [11:11] : 0	Fixed Capacity Management Not Supported
+  [10:10] : 0	Multi Domain Subsystem Not Supported
+  [9:9] : 0	UUID List Not Supported
+  [8:8] : 0	SQ Associations Not Supported
+  [7:7] : 0	Namespace Granularity Not Supported
+  [6:6] : 0	Traffic Based Keep Alive Not Supported
+  [5:5] : 0	Predictable Latency Mode Not Supported
+  [4:4] : 0	Endurance Groups Not Supported
+  [3:3] : 0	Read Recovery Levels Not Supported
+  [2:2] : 0	NVM Sets Not Supported
+  [1:1] : 0	Non-Operational Power State Permissive Not Supported
+  [0:0] : 0	128-bit Host Identifier Not Supported
+
+rrls      : 0
+cntrltype : 0
+  [7:2] : 0	Reserved
+  [1:0] : 0	Controller type not reported
+fguid     : 00000000-0000-0000-0000-000000000000
+crdt1     : 0
+crdt2     : 0
+crdt3     : 0
+nvmsr     : 0
+  [1:1] : 0	NVM subsystem Not part of an Enclosure
+  [0:0] : 0	NVM subsystem Not part of a Storage Device
+
+vwci      : 0
+  [7:7] : 0	VPD Write Cycles Remaining field is Not valid.
+  [6:0] : 0	VPD Write Cycles Remaining 
+
+mec       : 0
+  [1:1] : 0	NVM subsystem Not contains a Management Endpoint on a PCIe port
+  [0:0] : 0	NVM subsystem Not contains a Management Endpoint on an SMBus/I2C port
+
+oacs      : 0x17
+  [10:10] : 0	Lockdown Command and Feature Not Supported
+  [9:9] : 0	Get LBA Status Capability Not Supported
+  [8:8] : 0	Doorbell Buffer Config Not Supported
+  [7:7] : 0	Virtualization Management Not Supported
+  [6:6] : 0	NVMe-MI Send and Receive Not Supported
+  [5:5] : 0	Directives Not Supported
+  [4:4] : 0x1	Device Self-test Supported
+  [3:3] : 0	NS Management and Attachment Not Supported
+  [2:2] : 0x1	FW Commit and Download Supported
+  [1:1] : 0x1	Format NVM Supported
+  [0:0] : 0x1	Security Send and Receive Supported
+
+acl       : 4
+aerl      : 7
+frmw      : 0x12
+  [5:5] : 0	Multiple FW or Boot Update Detection Not Supported
+  [4:4] : 0x1	Firmware Activate Without Reset Supported
+  [3:1] : 0x1	Number of Firmware Slots
+  [0:0] : 0	Firmware Slot 1 Read/Write
+
+lpa       : 0x2
+  [6:6] : 0	Telemetry Log Data Area 4 Not Supported
+  [5:5] : 0	LID 0x0, Scope of each command in LID 0x5, 0x12, 0x13 Not Supported
+  [4:4] : 0	Persistent Event log Not Supported
+  [3:3] : 0	Telemetry host/controller initiated log page Not Supported
+  [2:2] : 0	Extended data for Get Log Page Not Supported
+  [1:1] : 0x1	Command Effects Log Page Supported
+  [0:0] : 0	SMART/Health Log Page per NS Not Supported
+
+elpe      : 63
+  [7:0] : 63 (0's based)	Error Log Page Entries (ELPE)
+
+npss      : 4
+  [7:0] : 4 (0's based)	Number of Power States Support (NPSS)
+
+avscc     : 0
+  [0:0] : 0	Admin Vendor Specific Commands uses Vendor Specific Format
+
+apsta     : 0
+  [0:0] : 0	Autonomous Power State Transitions Not Supported
+
+wctemp    : 356
+ [15:0] : 83 °C (356 K)	Warning Composite Temperature Threshold (WCTEMP)
+
+cctemp    : 358
+ [15:0] : 85 °C (358 K)	Critical Composite Temperature Threshold (CCTEMP)
+
+mtfa      : 100
+hmpre     : 16384
+hmmin     : 8192
+tnvmcap   : 1,000,204,886,016
+[127:0] : 1,000,204,886,016
+	Total NVM Capacity (TNVMCAP)
+
+unvmcap   : 0
+[127:0] : 0
+	Unallocated NVM Capacity (UNVMCAP)
+
+rpmbs     : 0
+ [31:24]: 0	Access Size
+ [23:16]: 0	Total Size
+  [5:3] : 0	Authentication Method
+  [2:0] : 0	Number of RPMB Units
+
+edstt     : 10
+dsto      : 1
+fwug      : 4
+kas       : 0
+hctma     : 0x1
+  [0:0] : 0x1	Host Controlled Thermal Management Supported
+
+mntmt     : 273
+ [15:0] : 0 °C (273 K)	Minimum Thermal Management Temperature (MNTMT)
+
+mxtmt     : 358
+ [15:0] : 85 °C (358 K)	Maximum Thermal Management Temperature (MXTMT)
+
+sanicap   : 0
+  [31:30] : 0	Additional media modification after sanitize operation completes successfully is not defined
+  [29:29] : 0	No-Deallocate After Sanitize bit in Sanitize command Supported
+    [2:2] : 0	Overwrite Sanitize Operation Not Supported
+    [1:1] : 0	Block Erase Sanitize Operation Not Supported
+    [0:0] : 0	Crypto Erase Sanitize Operation Not Supported
+
+hmminds   : 0
+hmmaxd    : 0
+nsetidmax : 0
+endgidmax : 0
+anatt     : 0
+anacap    : 0
+  [7:7] : 0	Non-zero group ID Not Supported
+  [6:6] : 0	Group ID does change
+  [4:4] : 0	ANA Change state Not Supported
+  [3:3] : 0	ANA Persistent Loss state Not Supported
+  [2:2] : 0	ANA Inaccessible state Not Supported
+  [1:1] : 0	ANA Non-optimized state Not Supported
+  [0:0] : 0	ANA Optimized state Not Supported
+
+anagrpmax : 0
+nanagrpid : 0
+pels      : 0
+domainid  : 0
+megcap    : 0
+sqes      : 0x66
+  [7:4] : 0x6	Max SQ Entry Size (64)
+  [3:0] : 0x6	Min SQ Entry Size (64)
+
+cqes      : 0x44
+  [7:4] : 0x4	Max CQ Entry Size (16)
+  [3:0] : 0x4	Min CQ Entry Size (16)
+
+maxcmd    : 0
+nn        : 1
+oncs      : 0x14
+  [10:10] : 0	All Fast Copy Not Supported
+  [9:9] : 0	Copy Single Atomicity Not Supported
+  [8:8] : 0	Copy Not Supported
+  [7:7] : 0	Verify Not Supported
+  [6:6] : 0	Timestamp Not Supported
+  [5:5] : 0	Reservations Not Supported
+  [4:4] : 0x1	Save and Select Supported
+  [3:3] : 0	Write Zeroes Not Supported
+  [2:2] : 0x1	Data Set Management Supported
+  [1:1] : 0	Write Uncorrectable Not Supported
+  [0:0] : 0	Compare Not Supported
+
+fuses     : 0
+  [0:0] : 0	Fused Compare and Write Not Supported
+
+fna       : 0
+  [3:3] : 0	Format NVM Broadcast NSID (FFFFFFFFh) Supported
+  [2:2] : 0	Crypto Erase Not Supported as part of Secure Erase
+  [1:1] : 0	Crypto Erase Applies to Single Namespace(s)
+  [0:0] : 0	Format Applies to Single Namespace(s)
+
+vwc       : 0x1
+  [2:1] : 0	Support for the NSID field set to FFFFFFFFh is not indicated
+  [0:0] : 0x1	Volatile Write Cache Present
+
+awun      : 0
+awupf     : 0
+icsvscc   : 0
+  [0:0] : 0	NVM Vendor Specific Commands uses Vendor Specific Format
+
+nwpc      : 0
+  [2:2] : 0	Permanent Write Protect Not Supported
+  [1:1] : 0	Write Protect Until Power Supply Not Supported
+  [0:0] : 0	No Write Protect and Write Protect Namespace Not Supported
+
+acwu      : 0
+ocfs      : 0
+  [3:3] : 0	Controller Copy Format 3h Not Supported
+  [2:2] : 0	Controller Copy Format 2h Not Supported
+  [1:1] : 0	Controller Copy Format 1h Not Supported
+  [0:0] : 0	Controller Copy Format 0h Not Supported
+
+sgls      : 0
+ [15:8] : 0	SGL Descriptor Threshold
+ [1:0]  : 0	Scatter-Gather Lists Not Supported
+
+mnan      : 0
+maxdna    : 0
+maxcna    : 0
+oaqd      : 0
+subnqn    : nqn.2026-07.com.siliconmotion:nvm-subsystem-sn-AA000000000000000073
+ioccsz    : 0
+iorcsz    : 0
+icdoff    : 0
+fcatt     : 0
+  [0:0] : 0	Dynamic Controller Model
+
+msdbd     : 0
+ofcs      : 0
+  [0:0] : 0	Disconnect command Not Supported
+
+ps      0 : mp:6.00W operational enlat:0 exlat:0 rrt:0 rrl:0
+            rwt:0 rwl:0 idle_power:- active_power:-
+            active_power_workload:-
+ps      1 : mp:3.00W operational enlat:0 exlat:0 rrt:1 rrl:1
+            rwt:1 rwl:1 idle_power:- active_power:-
+            active_power_workload:-
+ps      2 : mp:1.50W operational enlat:0 exlat:0 rrt:2 rrl:2
+            rwt:2 rwl:2 idle_power:- active_power:-
+            active_power_workload:-
+ps      3 : mp:0.0450W non-operational enlat:3000 exlat:3000 rrt:3 rrl:3
+            rwt:3 rwl:3 idle_power:- active_power:-
+            active_power_workload:-
+ps      4 : mp:0.0040W non-operational enlat:25000 exlat:25000 rrt:4 rrl:4
+            rwt:4 rwl:4 idle_power:- active_power:-
+            active_power_workload:-
+
+--- nvme id-ns /dev/nvme0n1 -H ---
+NVME Identify Namespace 1:
+nsze    : 0x74706db0
+ncap    : 0x74706db0
+nuse    : 0x74706db0
+nsfeat  : 0
+  [4:4] : 0	NPWG, NPWA, NPDG, NPDA, and NOWS are Not Supported
+  [3:3] : 0	NGUID and EUI64 fields if non-zero, Reused
+  [2:2] : 0	Deallocated or Unwritten Logical Block error Not Supported
+  [1:1] : 0	Namespace uses AWUN, AWUPF, and ACWU
+  [0:0] : 0	Thin Provisioning Not Supported
+
+nlbaf   : 0
+flbas   : 0
+  [6:5] : 0	Most significant 2 bits of Current LBA Format Selected
+  [4:4] : 0	Metadata Transferred in Separate Contiguous Buffer
+  [3:0] : 0	Least significant 4 bits of Current LBA Format Selected
+
+mc      : 0
+  [1:1] : 0	Metadata Pointer Not Supported
+  [0:0] : 0	Metadata as Part of Extended Data LBA Not Supported
+
+dpc     : 0
+  [4:4] : 0	Protection Information Transferred as Last Bytes of Metadata Not Supported
+  [3:3] : 0	Protection Information Transferred as First Bytes of Metadata Not Supported
+  [2:2] : 0	Protection Information Type 3 Not Supported
+  [1:1] : 0	Protection Information Type 2 Not Supported
+  [0:0] : 0	Protection Information Type 1 Not Supported
+
+dps     : 0
+  [3:3] : 0	Protection Information is Transferred as Last Bytes of Metadata
+  [2:0] : 0	Protection Information Disabled
+
+nmic    : 0
+  [0:0] : 0	Namespace Multipath Not Capable
+
+rescap  : 0
+  [7:7] : 0	Ignore Existing Key - Used as defined in revision 1.2.1 or earlier
+  [6:6] : 0	Exclusive Access - All Registrants Not Supported
+  [5:5] : 0	Write Exclusive - All Registrants Not Supported
+  [4:4] : 0	Exclusive Access - Registrants Only Not Supported
+  [3:3] : 0	Write Exclusive - Registrants Only Not Supported
+  [2:2] : 0	Exclusive Access Not Supported
+  [1:1] : 0	Write Exclusive Not Supported
+  [0:0] : 0	Persist Through Power Loss Not Supported
+
+fpi     : 0
+  [7:7] : 0	Format Progress Indicator Not Supported
+
+dlfeat  : 0
+  [4:4] : 0	Guard Field of Deallocated Logical Blocks is set to 0xFFFF
+  [3:3] : 0	Deallocate Bit in the Write Zeroes Command is Not Supported
+  [2:0] : 0	Bytes Read From a Deallocated Logical Block and its Metadata are Not Reported
+
+nawun   : 0
+nawupf  : 0
+nacwu   : 0
+nabsn   : 0
+nabo    : 0
+nabspf  : 0
+noiob   : 0
+nvmcap  : 1,000,204,886,016
+mssrl   : 0
+mcl     : 0
+msrc    : 0
+nulbaf  : 0
+anagrpid: 0
+nsattr	: 0
+nvmsetid: 0
+endgid  : 0
+nguid   : 00000000000000000000010000000000
+eui64   : 0000010000000000
+LBA Format  0 : Metadata Size: 0   bytes - Data Size: 512 bytes - Relative Performance: 0 Best (in use)
+
+--- nvme ns-descs /dev/nvme0n1 ---
+NVME Namespace Identification Descriptors NS 1:
+eui64   : 0000010000000000
+nguid   : 00000000000000000000010000000000
+
+--- nvme list-ns /dev/nvme0 ---
+[   0]:0x1
+
+--- nvme list-subsys ---
+nvme-subsys0 - NQN=nqn.2026-07.com.siliconmotion:nvm-subsystem-sn-AA000000000000000073
+               hostnqn=nqn.2014-08.org.nvmexpress:uuid:46f36880-d7da-11dd-869d-ac220bc1de28
+               iopolicy=(null)
+\
+ +- nvme0 pcie 0004:01:00.0 live
+
+--- nvme show-regs /dev/nvme0 -H ---
+cap     : 100030f00100ff
+	Controller Ready With Media Support (CRWMS): Not Supported
+	Controller Ready Independent of Media Support (CRIMS): Not Supported
+	NVM Subsystem Shutdown Supported   (NSSS): Not Supported
+	Controller Memory Buffer Supported (CMBS): The Controller Memory Buffer is Not Supported
+	Persistent Memory Region Supported (PMRS): The Persistent Memory Region is Not Supported
+	Memory Page Size Maximum         (MPSMAX): 8192 bytes
+	Memory Page Size Minimum         (MPSMIN): 4096 bytes
+	Controller Power Scope              (CPS): Not Reported
+	Boot Partition Support              (BPS): No
+	Command Sets Supported              (CSS): NVM command set is Supported
+	                                           One or more I/O Command Sets are Not Supported
+	                                           I/O Command Set is Supported
+	NVM Subsystem Reset Supported     (NSSRS): Yes
+	Doorbell Stride                   (DSTRD): 4 bytes
+	Timeout                              (TO): 120000 ms
+	Arbitration Mechanism Supported     (AMS): Weighted Round Robin with Urgent Priority Class is Not supported
+	Contiguous Queues Required          (CQR): Yes
+	Maximum Queue Entries Supported    (MQES): 256
+
+version : 10300
+	NVMe specification 1.3
+
+cc      : 460001
+	Controller Ready Independent of Media Enable (CRIME): Disabled
+	I/O Completion Queue Entry Size (IOCQES): 16 bytes
+	I/O Submission Queue Entry Size (IOSQES): 64 bytes
+	Shutdown Notification              (SHN): No notification; no effect
+	Arbitration Mechanism Selected     (AMS): Round Robin
+	Memory Page Size                   (MPS): 4096 bytes
+	I/O Command Set Selected           (CSS): NVM Command Set
+	Enable                              (EN): Yes
+
+csts    : 1
+	Processing Paused               (PP): No
+	NVM Subsystem Reset Occurred (NSSRO): No
+	Shutdown Status               (SHST): Normal operation (no shutdown has been requested)
+	Controller Fatal Status        (CFS): False
+	Ready                          (RDY): Yes
+
+nssr    : 0
+	NVM Subsystem Reset Control (NSSRC): 0
+
+crto    : 0
+	CRIMT                               : 0 secs
+	CRWMT                               : 0 secs
+intms   : 0
+	Interrupt Vector Mask Set (IVMS): 0
+
+intmc   : 0
+	Interrupt Vector Mask Clear (IVMC): 0
+
+aqa     : 1f001f
+	Admin Completion Queue Size (ACQS): 32
+	Admin Submission Queue Size (ASQS): 32
+
+asq     : ffffd000
+	Admin Submission Queue Base (ASQB): ffffd000
+
+acq     : ffffe000
+	Admin Completion Queue Base (ACQB): ffffe000
+
+cmbloc  : 0
+	Controller Memory Buffer feature is not supported
+
+cmbsz   : 0
+	Controller Memory Buffer feature is not supported
+
+bpinfo  : 0
+	Active Boot Partition ID      (ABPID): 0
+	Boot Read Status                (BRS): No Boot Partition read operation requested
+	Boot Partition Size            (BPSZ): 0
+bprsel  : 0
+	Boot Partition Identifier      (BPID): 0
+	Boot Partition Read Offset    (BPROF): 0
+	Boot Partition Read Size      (BPRSZ): 0
+bpmbl   : 0
+	Boot Partition Memory Buffer Base Address (BMBBA): 0
+cmbmsc	: 0
+	Controller Base Address         (CBA): 0
+	Controller Memory Space Enable (CMSE): 0
+	Capabilities Registers Enabled  (CRE): CMBLOC and CMBSZ registers are NOT enabled
+
+cmbsts	: 0
+	Controller Base Address Invalid (CBAI): 0
+
+pmrcap  : 0
+	Controller Memory Space Supported                   (CMSS): Referencing PMR with host supplied addresses is Not Supported
+	Persistent Memory Region Timeout                   (PMRTO): 0
+	Persistent Memory Region Write Barrier Mechanisms (PMRWBM): 0
+	Persistent Memory Region Time Units                (PMRTU): PMR time unit is 500 milliseconds
+	Base Indicator Register                              (BIR): 0
+	Write Data Support                                   (WDS): Write data to the PMR is not supported
+	Read Data Support                                    (RDS): Read data from the PMR is not supported
+pmrctl  : 0
+	Enable (EN): PMR is Disabled
+pmrsts  : 0
+	Controller Base Address Invalid (CBAI): 0
+	Health Status                   (HSTS): Normal Operation
+	Not Ready                       (NRDY): The Persistent Memory Region is Not Ready to process PCI Express memory read and write requests
+	Error                            (ERR): 0
+pmrebs  : 0
+	PMR Elasticity Buffer Size Base  (PMRWBZ): 0
+	Read Bypass Behavior                     : memory reads not conflicting with memory writes in the PMR Elasticity Buffer MAY bypass those memory writes
+	PMR Elasticity Buffer Size Units (PMRSZU): Bytes
+pmrswtp : 0
+	PMR Sustained Write Throughput       (PMRSWTV): 0
+	PMR Sustained Write Throughput Units (PMRSWTU): Bytes/second
+pmrmscl	: 0
+	Controller Base Address         (CBA): 0
+	Controller Memory Space Enable (CMSE): 0
+
+pmrmscu	: 0
+	Controller Base Address         (CBA): 0
+
+--- nvme fw-log /dev/nvme0 ---
+Firmware Log for device:nvme0
+afi  : 0x1
+frs1 : 0x4c304e3330313154 (T1103N0L)
+
+--- nvme smart-log /dev/nvme0 -H ---
+Smart Log for NVME device:nvme0 namespace-id:ffffffff
+critical_warning			: 0
+      Available Spare[0]             : 0
+      Temp. Threshold[1]             : 0
+      NVM subsystem Reliability[2]   : 0
+      Read-only[3]                   : 0
+      Volatile mem. backup failed[4] : 0
+      Persistent Mem. RO[5]          : 0
+temperature				: 40 °C (313 K)
+available_spare				: 100%
+available_spare_threshold		: 10%
+percentage_used				: 0%
+endurance group critical warning summary: 0
+Data Units Read				: 4,679 (2.40 GB)
+Data Units Written			: 131,279 (67.21 GB)
+host_read_commands			: 147,125
+host_write_commands			: 546,248
+controller_busy_time			: 9
+power_cycles				: 3
+power_on_hours				: 1
+unsafe_shutdowns			: 2
+media_errors				: 0
+num_err_log_entries			: 0
+Warning Temperature Time		: 0
+Critical Composite Temperature Time	: 0
+Thermal Management T1 Trans Count	: 0
+Thermal Management T2 Trans Count	: 0
+Thermal Management T1 Total Time	: 0
+Thermal Management T2 Total Time	: 0
+
+--- nvme error-log /dev/nvme0 -e 64 ---
+Error Log Entries for device:nvme0 entries:64
+.................
+ Entry[ 0]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[ 1]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[ 2]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[ 3]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[ 4]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[ 5]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[ 6]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[ 7]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[ 8]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[ 9]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[10]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[11]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[12]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[13]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[14]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[15]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[16]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[17]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[18]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[19]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[20]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[21]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[22]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[23]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[24]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[25]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[26]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[27]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[28]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[29]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[30]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[31]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[32]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[33]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[34]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[35]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[36]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[37]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[38]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[39]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[40]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[41]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[42]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[43]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[44]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[45]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[46]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[47]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[48]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[49]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[50]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[51]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[52]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[53]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[54]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[55]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[56]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[57]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[58]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[59]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[60]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[61]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[62]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+ Entry[63]   
+.................
+error_count	: 0
+sqid		: 0
+cmdid		: 0
+status_field	: 0(Successful Completion: The command completed without error)
+phase_tag	: 0
+parm_err_loc	: 0
+lba		: 0
+nsid		: 0
+vs		: 0
+trtype		: The transport type is not indicated or the error is not transport related.
+csi		: 0
+opcode		: 0
+cs		: 0
+trtype_spec_info: 0
+log_page_version: 0
+.................
+
+--- nvme self-test-log /dev/nvme0 ---
+Device Self Test Log for NVME device:nvme0
+Current operation  : 0
+Current Completion : 0%
+Self Test Result[0]:
+  Operation Result             : 0xf
+Self Test Result[1]:
+  Operation Result             : 0xf
+Self Test Result[2]:
+  Operation Result             : 0xf
+Self Test Result[3]:
+  Operation Result             : 0xf
+Self Test Result[4]:
+  Operation Result             : 0xf
+Self Test Result[5]:
+  Operation Result             : 0xf
+Self Test Result[6]:
+  Operation Result             : 0xf
+Self Test Result[7]:
+  Operation Result             : 0xf
+Self Test Result[8]:
+  Operation Result             : 0xf
+Self Test Result[9]:
+  Operation Result             : 0xf
+Self Test Result[10]:
+  Operation Result             : 0xf
+Self Test Result[11]:
+  Operation Result             : 0xf
+Self Test Result[12]:
+  Operation Result             : 0xf
+Self Test Result[13]:
+  Operation Result             : 0xf
+Self Test Result[14]:
+  Operation Result             : 0xf
+Self Test Result[15]:
+  Operation Result             : 0xf
+Self Test Result[16]:
+  Operation Result             : 0xf
+Self Test Result[17]:
+  Operation Result             : 0xf
+Self Test Result[18]:
+  Operation Result             : 0xf
+Self Test Result[19]:
+  Operation Result             : 0xf
+
+--- nvme sanitize-log /dev/nvme0 ---
+NVMe status: Invalid Field in Command: A reserved coded value or an unsupported value in a defined field(0x2)
+(unsupported or failed)
+
+--- nvme endurance-log /dev/nvme0 ---
+NVMe status: Invalid Log Page: The log page indicated is invalid(0x109)
+(unsupported or failed)
+
+--- nvme get-feature /dev/nvme0 -f 0x01 -H ---
+get-feature:0x01 (Arbitration), Current value:0x00000006
+	High Priority Weight   (HPW): 1
+	Medium Priority Weight (MPW): 1
+	Low Priority Weight    (LPW): 1
+	Arbitration Burst       (AB): 64
+
+--- nvme get-feature /dev/nvme0 -f 0x02 -H ---
+get-feature:0x02 (Power Management), Current value:00000000
+	Workload Hint (WH): 0 - No Workload
+	Power State   (PS): 0
+
+--- nvme get-feature /dev/nvme0 -f 0x04 -H ---
+get-feature:0x04 (Temperature Threshold), Current value:0x00000164
+	Threshold Type Select         (THSEL): 0 - Over Temperature Threshold
+	Threshold Temperature Select (TMPSEL): 0 - Composite Temperature
+	Temperature Threshold         (TMPTH): 83 °C (356 K)
+
+--- nvme get-feature /dev/nvme0 -f 0x05 -H ---
+get-feature:0x05 (Error Recovery), Current value:00000000
+	Deallocated or Unwritten Logical Block Error Enable (DULBE): Disabled
+	Time Limited Error Recovery                          (TLER): 0 ms
+
+--- nvme get-feature /dev/nvme0 -f 0x06 -H ---
+get-feature:0x06 (Volatile Write Cache), Current value:0x00000001
+	Volatile Write Cache Enable (WCE): Enabled
+
+--- nvme get-feature /dev/nvme0 -f 0x07 -H ---
+get-feature:0x07 (Number of Queues), Current value:0x000f000f
+	Number of IO Completion Queues Allocated (NCQA): 16
+	Number of IO Submission Queues Allocated (NSQA): 16
+
+--- nvme get-feature /dev/nvme0 -f 0x08 -H ---
+get-feature:0x08 (Interrupt Coalescing), Current value:00000000
+	Aggregation Time     (TIME): 0 usec
+	Aggregation Threshold (THR): 1
+
+--- nvme get-feature /dev/nvme0 -f 0x0a -H ---
+get-feature:0x0a (Write Atomicity Normal), Current value:00000000
+	Disable Normal (DN): False
+
+--- nvme get-feature /dev/nvme0 -f 0x0b -H ---
+get-feature:0x0b (Async Event Configuration), Current value:0x00000200
+	Discovery Log Page Change Notices                         : Do not send async event
+	Endurance Group Event Aggregate Log Change Notices        : Do not send async event
+	LBA Status Information Notices                            : Do not send async event
+	Predictable Latency Event Aggregate Log Change Notices    : Do not send async event
+	Asymmetric Namespace Access Change Notices                : Do not send async event
+	Telemetry Log Notices                                     : Do not send async event
+	Firmware Activation Notices                               : Send async event
+	Namespace Attribute Notices                               : Do not send async event
+	SMART / Health Critical Warnings                          : Do not send async event
+
+--- nvme get-feature /dev/nvme0 -f 0x0d -H ---
+get-feature:0x0d (Host Memory Buffer), Current value:0x00000001
+	Enable Host Memory (EHM): Enabled
+	Host Memory Descriptor List Entry Count (HMDLEC): 2
+	Host Memory Descriptor List Address     (HMDLAU): 0x0
+	Host Memory Descriptor List Address     (HMDLAL): 0xffff9000
+	Host Memory Buffer Size                  (HSIZE): 16384
+
+--- nvme get-feature /dev/nvme0 -f 0x0e -H ---
+NVMe status: Invalid Field in Command: A reserved coded value or an unsupported value in a defined field(0x2)
+(unsupported or failed)
+
