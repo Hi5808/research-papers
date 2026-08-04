@@ -1,21 +1,36 @@
 # Characterizing an Unbranded NVMe SSD: The Dead Sensor and the Span-Dependent Cache
 
-**Platform:** Seeed Studio reComputer J401 carrier — NVIDIA Jetson Orin NX 16GB (module P3767-0000), not an NVIDIA developer kit
-**Software stack:** JetPack 7.x, L4T R39.2.0, Ubuntu 24.04.4, kernel 6.8.12-1021-tegra, fio 3.36, nvme-cli, smartmontools 7.4
+**Platform:** Seeed Studio reComputer J4012 — NVIDIA Jetson Orin NX 16GB (module P3767-0000, SKU 699-13767-0000-300 rev H.2) on a J401 carrier, not an NVIDIA developer kit
+**Software stack:** JetPack 7.2, L4T R39.2.0, Ubuntu 24.04.4, kernel 6.8.12-1021-tegra (oot variant), fio 3.36, nvme-cli, smartmontools 7.4
 **Date:** August 2026
 
 > **Platform identification note.** The device tree `model` string on this unit
 > reads `NVIDIA Jetson Orin NX Engineering Reference Developer Kit Super`. The
 > "Developer Kit" part is wrong, and the trap is the same one documented in
 > [paper 7](research_7_jetson_fan_curve_thermal.md): the DT `model` string is
-> free text set by the BSP. The hardware identifiers agree this is an Orin NX
-> 16GB module on a Seeed carrier:
+> free text set by the BSP and can name hardware that is not present.
+>
+> Four independent identifiers place the hardware, listed weakest to strongest:
 >
 > ```
-> TNSPEC      3767-300-0000-H.2-1-0-recomputer-orin-j401-
-> compatible  nvidia,p3768-0000+p3767-0000-super / nvidia,p3767-0000
-> 15 GiB RAM · 8x Cortex-A78AE (CPU part 0xd42)
+> DT compatible   nvidia,p3768-0000+p3767-0000-super / nvidia,p3767-0000
+> DT chosen/sku   699-13767-0000-300 H.2      (3767-0000 = Orin NX 16GB)
+> TNSPEC          3767-300-0000-H.2-1-0-recomputer-orin-j401-
+> flashed image   mfi_recomputer-orin-nx-16g-j401-7.2.0-39.2.0-2026-06-18.tar.gz
 > ```
+>
+> Note that `compatible` names the **p3768-0000 NVIDIA reference carrier**,
+> which is not what this board is — Seeed derives its BSP from NVIDIA's and the
+> string is inherited. TNSPEC is better but is written at flash time and
+> describes the flashing config, not necessarily the silicon. The decisive
+> source is the image name recorded in `/etc/nv_tegra_release`, which names the
+> module capacity and the carrier together: `orin-nx-16g-j401`. A J401 carrier
+> carrying an Orin NX 16GB is sold as the **reComputer J4012**.
+>
+> Corroborating: 15 GiB usable RAM and 8x Cortex-A78AE (CPU part `0xd42`) match
+> Orin NX 16GB and rule out the 8 GB P3767-0001 and the 6-core Orin Nano SKUs.
+> PCIe enumerates three root ports — M.2 M-key (the drive under test), M.2
+> E-key (an Intel 7260), and a Realtek RTL8111 GbE.
 >
 > This matters for every thermal statement below. The M.2 slot sits on a J401
 > carrier with its own airflow path, not in an NVIDIA reference enclosure.

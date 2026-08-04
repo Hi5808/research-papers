@@ -151,7 +151,7 @@ A full non-destructive characterization of a 1 TB SSD of unknown provenance, per
 - The 128 KiB maximum I/O size is the *host's* limit, not the drive's: Identify reports `MDTS=6` (256 KiB), inverting the usual assumption that such caps are a drive property
 - The sampling harness built for this campaign was found to overstate throughput by 32% by dividing counter deltas by a nominal interval it never actually achieved — caught only because fio measured the same quantity independently, and revealed by peak samples that exceeded the drive's own PCIe link
 
-**Platform:** reComputer J401 carrier (Jetson Orin NX 16GB) | **Date:** August 2026
+**Platform:** reComputer J4012 (Jetson Orin NX 16GB on a J401 carrier) | **Date:** August 2026
 
 [Read full paper →](research_8_nvme_characterization.md) · Raw data: [SLC write profile](data/nvme-20260804-slc-write-profile.csv) · [full sampler run](data/nvme-20260804-sampler-full-run.csv) · [SMART pre/post](data/nvme-20260804-smart-pre.json)
 
