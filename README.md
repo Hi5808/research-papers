@@ -118,9 +118,26 @@ Recovering a Radxa ROCK 5B+ from an unrecognized maskrom-mode USB state on a non
 
 ---
 
+### 7. Fan Curve Tuning on Jetson Orin: The Thermal-Margin Encoding Trap
+
+An undocumented encoding in NVIDIA's `nvfancontrol` configuration causes fan-curve edits to be applied inverted, plus measured thermal results from a retuned curve under combined CPU+GPU load and a benchmark-methodology failure mode in `nvpmodel`.
+
+**Key findings:**
+- With `TMARGIN ENABLED`, the fan curve's temperature column is *margin below the 105 °C limit*, not degrees Celsius — an operator targeting 60 °C who writes `60` actually sets 45 °C, inverting their model of every subsequent edit
+- The encoding is verifiable on a live system three independent ways (kernel trip-point complements, reductio on the Celsius reading, and live RPM interpolation), though the interpolation test is degenerate at exactly half the limit temperature
+- The stock `quiet` profile holds the fan fully off until Tj 35 °C and below 4000 RPM until 94 °C — acoustically sensible, but it introduces unmeasured thermal variance into benchmarks
+- A retuned curve held Tj to 57 °C under sustained combined CPU+GPU load at 25 W, but with the fan at 94% of maximum — sufficient, not robust
+- `nvpmodel -m 2` returned success, logged as applied, and silently reverted; only the achieved clocks revealed the run had executed at the previous power cap. Jetson benchmarks must record achieved clocks, not requested mode
+
+**Platform:** NVIDIA Jetson Orin Nano 8GB | **Date:** August 2026
+
+[Read full paper →](research_7_jetson_fan_curve_thermal.md) · [Raw data](data/thermal-20260803-25W-combined-load.csv)
+
+---
+
 ## About
 
-Papers 1-3 document research from production deployments on NVIDIA Jetson Orin Nano 8GB hardware, emphasizing practical systems-level challenges in edge AI deployment. Papers 4-5 document findings from building and evaluating a multi-model small-LLM fine-tuning pipeline, emphasizing failure modes that produce valid-looking but degraded artifacts, and the evaluation rigor required to trust A/B comparisons between fine-tuned models. Paper 6 documents hardware-level board bring-up, covering device-discovery methodology and firmware-flashing tool regressions under real-world host constraints.
+Papers 1-3 document research from production deployments on NVIDIA Jetson Orin Nano 8GB hardware, emphasizing practical systems-level challenges in edge AI deployment. Papers 4-5 document findings from building and evaluating a multi-model small-LLM fine-tuning pipeline, emphasizing failure modes that produce valid-looking but degraded artifacts, and the evaluation rigor required to trust A/B comparisons between fine-tuned models. Paper 6 documents hardware-level board bring-up, covering device-discovery methodology and firmware-flashing tool regressions under real-world host constraints. Paper 7 returns to the Jetson platform at the thermal and power-management layer, documenting a configuration-encoding trap and the measurement discipline required for trustworthy thermal benchmarks.
 
 ## Citation
 
