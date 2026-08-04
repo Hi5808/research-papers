@@ -1,12 +1,20 @@
 # Fan Curve Tuning on Jetson Orin: The Thermal-Margin Encoding Trap
 
-**Platform:** NVIDIA Jetson Orin Nano 8GB (P3767-0000)
+**Platform:** NVIDIA Jetson Orin Nano 8GB class, P3767 carrier (6× A78AE, 8 SM Ampere, 1728 MHz / 1020 MHz at MAXN_SUPER)
 **Software stack:** JetPack 7.x, L4T R39.2.0, CUDA 13.2, nvfancontrol (stock)
 **Date:** August 2026
 
+> **Platform identification note.** The device tree on this unit reports
+> `NVIDIA Jetson Orin NX Engineering Reference Developer Kit Super` and the fan
+> config resolves to `nvfancontrol_p3767_0000.conf`, while the CPU count (6) and
+> clock ceilings match an Orin Nano 8GB Super rather than an Orin NX 16GB (8
+> cores). Reference-carrier DT strings are not a reliable module identifier.
+> Absolute temperatures below are specific to this unit; the encoding, methods
+> and failure modes are not.
+
 ## Abstract
 
-NVIDIA's `nvfancontrol` fan curve configuration on Jetson Orin encodes its temperature column as **thermal margin below the throttle limit**, not absolute temperature, whenever `TMARGIN` is enabled. The encoding is undocumented in the config file itself and produces a curve that reads as inverted. An operator who edits the file assuming degrees Celsius will set thresholds that are wrong by `limit − intended`, in the direction opposite to intent. This paper documents the encoding, gives three independent methods to verify it on a live system, and reports measured thermal results from a retuned curve under combined CPU+GPU load at both 25 W and MAXN_SUPER power modes. A secondary finding concerns `nvpmodel` mode switches that report success and silently revert without a reboot, and the resulting requirement that thermal benchmarks assert on *achieved* clocks rather than *requested* power mode.
+NVIDIA's `nvfancontrol` fan curve configuration on Jetson Orin encodes its temperature column as **thermal margin below the throttle limit**, not absolute temperature, whenever `TMARGIN` is enabled. The encoding is undocumented in the config file itself and produces a curve that reads as inverted. An operator who edits the file assuming degrees Celsius will set thresholds that are wrong by `limit − intended`, in the direction opposite to intent. This paper documents the encoding, gives three independent methods to verify it on a live system, and reports measured thermal results from a retuned curve under combined CPU+GPU load at both 25 W and MAXN_SUPER power modes, including a 30-minute maximum-configuration soak. Two further results concern measurement rather than cooling: with closed-loop RPM control the fan's declared ceiling is a config value rather than a hardware limit, and the module's power envelope is reachable only by a load that exercises tensor cores and DRAM, not by SM occupancy alone. A secondary finding concerns `nvpmodel` mode switches that report success and silently revert without a reboot, and the resulting requirement that thermal benchmarks assert on *achieved* clocks rather than *requested* power mode.
 
 ## Key Finding #1: The TEMP Column Is Margin, Not Temperature
 
@@ -124,7 +132,7 @@ Observations:
 
 - **The 60 °C target holds at 25 W with 3 °C to spare, and at MAXN_SUPER with none.** At full clocks Tj reached exactly 60 °C at t=240 s and plateaued there for the remaining 115 s, with the GPU zone touching 61 °C. The target is met at the boundary, not within it.
 - **The fan curve saturated.** From t≈155 s the closed-loop controller was requesting its maximum 6000 RPM target and measured 5929–6003 RPM for the rest of the run. Thermal equilibrium at full load is therefore set by the fan's ceiling, not by the curve's shape — no further tuning of the profile can improve this operating point.
-- **PWM headroom remained at saturation.** The controller met its 6000 RPM target at PWM 225/255 (88%). Because `FAN_CONTROL close_loop` targets RPM rather than PWM, the binding constraint is the curve's declared RPM ceiling, not the PWM range. Whether this fan can be driven meaningfully above 6000 RPM is untested and would need the profile's RPM column raised to find out.
+- **PWM headroom remained at saturation.** The controller met its 6000 RPM target at PWM 225/255 (88%). Because `FAN_CONTROL close_loop` targets RPM rather than PWM, the binding constraint is the curve's declared RPM ceiling, not the PWM range. Raising the target above that ceiling confirms the fan reaches 6258–6296 RPM at PWM 255 — see Finding #6.
 - **No thermal throttling occurred in either mode.** CPU held a flat 1728 MHz across all 60 MAXN_SUPER load samples and GPU held 1020 MHz. The thermal solution sustains full clocks indefinitely at ~60 °C; the 95 °C throttle trip was never approached.
 - **Power scaled far less than clocks.** MAXN_SUPER drew 15.3 W mean against 12.8 W at 25 W mode — a 20% increase for a 29% CPU clock and 11% GPU clock increase. Note the "25 W" mode measured 12.8 W at the wall-adjacent VDD_IN rail under a synthetic worst case; the mode names are configuration labels, not observed consumption.
 - **Idle cost is real and permanent.** Idle Tj fell from 52.5 °C to 45–47 °C, but idle fan speed rose from ~1756 to ~3266–3560 RPM. That is a continuous acoustic cost bought for thermal margin with no reliability benefit — the throttle trip is 95 °C and critical is 104.5 °C.
@@ -169,6 +177,107 @@ CPUMAX=$(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq)
 
 This generalizes beyond fan tuning: any Jetson benchmark comparing power modes is vulnerable to silently measuring the same mode twice. The assertion must gate data collection — a harness that logs the anomaly but proceeds still produces a file someone will later analyze. The revised harness exits non-zero without writing a CSV when the achieved clocks contradict the requested mode.
 
+## Key Finding #6: The Declared Fan Ceiling Is Not the Hardware Ceiling
+
+The stock profile declares 6000 RPM as its maximum, and `FAN_CONTROL close_loop`
+chases RPM rather than PWM. During the MAXN_SUPER run the controller met that
+6000 RPM target at **PWM 225/255** — it stopped pushing because it had reached
+the number in the config, not because the fan had reached its limit.
+
+Setting an intentionally unreachable target (8000 RPM) forces PWM to saturate:
+
+```bash
+FAN_PROFILE quiet {
+	#TEMP 	HYST	PWM	RPM
+	0	0	255	8000
+	105	0	255	8000
+}
+```
+
+Measured result: **6258–6296 RPM at PWM 255/255.** The stock profile leaves
+roughly 4–5% of available airflow unused. This is small in absolute terms, but
+it is free, and it matters precisely in the fan-saturated regime where nothing
+else in the curve can help.
+
+The general point: with closed-loop RPM control, the declared ceiling is a
+policy choice in a config file, not a hardware property. Any conclusion of the
+form "the fan is maxed out" should be checked against PWM, not RPM.
+
+## Key Finding #7: Sustained Maximum-Load Behavior
+
+Full configuration — MAXN_SUPER, `jetson_clocks` (DVFS disabled, clocks pinned
+at min=max), fan pinned flat out, and a multi-engine GPU load (concurrent
+tensor-core HMMA, DRAM streaming, FP32 FMA) alongside 6 CPU workers — run for
+30 minutes at 10 s sampling:
+
+| Metric | Value |
+|---|---|
+| Load samples | 177 |
+| Peak Tj | **67 °C** |
+| Mean Tj | 64.6 °C |
+| Fan | 6296 RPM peak, PWM 255 throughout |
+| Mean VDD_IN | **20.0 W** |
+| CPU clock | 1728–1728 MHz (pinned) |
+| Throttled samples | **0** |
+| Idle baseline | 45.3 °C, 6.6 W |
+
+Convergence, by quarter of the load phase:
+
+| Quarter | Window | Drift | Mean Tj |
+|---|---|---|---|
+| 1 | 120–558 s | +1.858 °C/min | 60.4 °C |
+| 2 | 568–1005 s | +0.056 °C/min | 65.6 °C |
+| 3 | 1016–1453 s | −0.049 °C/min | 65.9 °C |
+| 4 | 1463–1911 s | +0.191 °C/min | 66.4 °C |
+
+**Equilibrium is reached at roughly 10 minutes, near 65–66 °C, and holds.** The
+system sustains pinned maximum clocks indefinitely at 28 °C below the 95 °C
+throttle trip, with no throttled samples in 30 minutes. On this hardware the
+thermal solution is not the constraint at any available power mode.
+
+The residual movement in quarters 3–4 is approximately 1 °C of wander, not a
+trend — see the methodology note below before reading it as one.
+
+## Key Finding #8: Power Draw Is a Property of the Load, Not the Board
+
+Reaching the board's actual power envelope required rewriting the load, not
+changing any setting. Three loads, same hardware and same power mode:
+
+| Load | VDD_IN | CPU_GPU_CV rail | SOC rail |
+|---|---|---|---|
+| Idle | 5.5 W | 1.3 W | 1.5 W |
+| FP32 FMA only (GPU) | 11.7 W | 7.5 W | **1.4 W** |
+| Tensor + DRAM + FP32 (GPU) | 16.2 W | 4.2 W | **5.1 W** |
+| Above + 6 CPU workers + `jetson_clocks` | **20.0 W** | 7.8 W | 5.2 W |
+
+The diagnostic is the SOC rail. Under a register-resident FP32 kernel it does
+not move at all (1.5 → 1.4 W), proving the kernel generates zero DRAM traffic
+despite fully occupying the SMs. Adding a 512 MB streaming working set — larger
+than L2, so every pass reaches DRAM — moves that rail to 5.1 W and raises total
+draw by 4.5 W even as GPU *compute* power falls.
+
+**Implication for thermal testing:** a GPU load that saturates SM occupancy can
+still leave a third of the module's power envelope untouched. Thermal headroom
+measured with an FP32 microbenchmark will be optimistic against real inference
+workloads, which stream weights from DRAM and use tensor cores. Per-rail
+instrumentation, not just total wattage, is what reveals the gap.
+
+## Methodology Note: Log Millidegrees, Not Degrees
+
+The initial harness logged Tj truncated to whole degrees. At that resolution a
+single 1 °C rounding step across a 7-minute regression window presents as
+≈0.2 °C/min of apparent trend — enough to move a 30-minute soak from "converged"
+to "still drifting" on quantization noise alone.
+
+The quarter-by-quarter table above shows the failure clearly: quarters 2 and 3
+are flat (+0.056, −0.049 °C/min) while quarter 4 reads +0.191 °C/min, from a
+total movement of about 0.5 °C. The kernel exposes millidegrees at
+`thermal_zone*/temp`; regress on that and reserve the rounded value for display.
+
+This applies to any convergence test where the effect size is comparable to the
+logging resolution — a category that includes most thermal soaks, since the
+question is precisely whether a small slope is real.
+
 ## Reproduction
 
 ```bash
@@ -197,7 +306,8 @@ Note that `/etc/nvpower/nvfancontrol/*.conf` is a stock NVIDIA file and may be o
 - **Single unit, single ambient.** No ambient temperature control; results are from one P3767-0000 in open air. Absolute temperatures will shift with enclosure and room conditions.
 - **Load duration is short relative to the question asked.** The MAXN_SUPER run reached fan saturation at t≈155 s and sat at 60 °C for the final 115 s. Temperature was flat but the system was at its cooling ceiling, so a longer run may drift upward. A 300 s phase is sufficient to locate the equilibrium and insufficient to prove it is stable over hours.
 - **Synthetic load.** `stress` plus an FMA kernel is a thermal worst case, not a representative inference workload. Real TensorRT pipelines have duty cycles that produce lower sustained temperatures, and do not load CPU and GPU simultaneously at full occupancy.
-- **Fan maximum assumed, not measured.** The 6000 RPM ceiling is the value declared in the stock profile. Whether the hardware exceeds it was not tested (PWM was at 225/255 when the RPM target was met).
+- **Ambient uncontrolled.** The +0.5 °C movement in the final quarter of the 30-minute soak is within the range a warming room would produce, and no ambient sensor was logged. Distinguishing residual device drift from room drift requires an external probe.
+- **30 minutes is not 30 days.** The soak establishes that the thermal design converges. It says nothing about dust accumulation, fan bearing wear, or seasonal ambient swings, all of which move the equilibrium over a deployment lifetime.
 - **Margin encoding verified on P3767-0000 only.** Other Jetson modules ship different `nvfancontrol_*.conf` files and may not enable `TMARGIN`. Check for the directive before assuming the conversion applies.
 - Comparisons against previously published figures from this platform are invalid unless fan curve and `nvpmodel` mode both match, since both affect sustained-clock behavior.
 
@@ -207,5 +317,6 @@ Sample-level CSVs (5 s interval; Tj, CPU/GPU/SoC temperatures, fan RPM and PWM, 
 
 - `data/thermal-20260803-25W-combined-load.csv` — 25 W mode, 96 samples
 - `data/thermal-20260803-MAXN_SUPER-combined-load.csv` — MAXN_SUPER, 96 samples
+- `data/thermal-20260803-MAXED-30min-soak.csv` — MAXN_SUPER + `jetson_clocks` + fan pinned + multi-engine load, 30 min, 213 samples
 
 The 25 W file retains a `nvpmodel_requested` column recording the value that was requested but not applied; the MAXN_SUPER file records `nvpmodel_achieved` alongside `cpu_max_mhz`, verified before collection. The column-name difference between the two files is deliberate and preserves the distinction described in Finding #5.

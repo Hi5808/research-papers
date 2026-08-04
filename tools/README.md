@@ -67,8 +67,10 @@ detected — restore immediately.
 **On `--max`:** it sets an RPM target above the declared ceiling. Because
 `FAN_CONTROL close_loop` chases RPM rather than PWM, an unreachable target
 drives PWM to 255 and reveals the fan's true maximum. On an Orin Nano Super
-dev kit this produced 6258 RPM against a declared ceiling of 6000 — the stock
-profile leaves roughly 4% of airflow unused. Expect continuous full-speed
+class dev kit this produced 6258-6296 RPM against a declared ceiling of 6000 -
+the stock profile leaves roughly 4-5% of airflow unused. It also means "the fan
+is maxed" should be judged from PWM, not RPM: the controller stops at the
+config's number, not the hardware's. Expect continuous full-speed
 noise; this is a test mode, not a daily driver.
 
 ## `jetson-soak.sh`
@@ -93,6 +95,16 @@ slope over the final third of the load phase:
 The drift figure is the point of the tool. A peak temperature alone doesn't
 distinguish "hot but stable" from "still climbing when the test ended," and
 those have opposite implications for a 24/7 deployment.
+
+The regression runs on **millidegrees**, not the rounded `tj_c` column. This
+matters more than it sounds: at whole-degree resolution a single rounding step
+across a 7-minute window reads as ~0.2 C/min of trend, which is enough to flip
+a converged 30-minute soak to "still drifting" on quantization noise alone.
+Both columns are logged; use `tj_mc` for any analysis.
+
+Note that the verdict thresholds are heuristics, and ambient drift is not
+separated from device drift — no room sensor is involved. A slow positive slope
+may be your workspace warming up rather than the board failing to converge.
 
 ### `--expect-cpu-mhz` — read this before trusting any power-mode comparison
 

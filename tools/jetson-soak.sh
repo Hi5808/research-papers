@@ -76,12 +76,16 @@ if (( USE_GPU )); then
 fi
 
 OUT=${OUT:-"$PWD/soak-$(date +%Y%m%d-%H%M%S).csv"}
-echo "t_s,phase,nvpmodel,cpu_max_mhz,tj_c,cpu_c,gpu_c,fan_rpm,fan_pwm,cpu_mhz,gpu_mhz,vdd_in_mw,cpu_gpu_mw,soc_mw" > "$OUT"
+# tj_mc is millidegrees, kept alongside tj_c: the drift regression needs the
+# raw resolution. At whole-degree granularity a single rounding step across a
+# few minutes reads as ~0.2 C/min of false trend.
+echo "t_s,phase,nvpmodel,cpu_max_mhz,tj_c,tj_mc,cpu_c,gpu_c,fan_rpm,fan_pwm,cpu_mhz,gpu_mhz,vdd_in_mw,cpu_gpu_mw,soc_mw" > "$OUT"
 
 PEAK=0; THROTTLED=0
 sample() {
-	local tj cpu gpu rpm pwm cf gf
-	tj=$(jt_temp_c)
+	local tj tjmc cpu gpu rpm pwm cf gf
+	tjmc=$(jt_read "$JT_TJ_ZONE/temp")
+	tj=$(( tjmc / 1000 ))
 	cpu=$([[ -n $JT_CPU_ZONE ]] && jt_temp_c "$JT_CPU_ZONE" || echo 0)
 	gpu=$([[ -n $JT_GPU_ZONE ]] && jt_temp_c "$JT_GPU_ZONE" || echo 0)
 	rpm=$(jt_fan_rpm); pwm=$(jt_fan_pwm)
@@ -89,7 +93,7 @@ sample() {
 	(( tj > PEAK )) && PEAK=$tj
 	# Under load, a CPU clock materially below max implies throttling or DVFS idle.
 	[[ $2 == load ]] && (( cf < CPUMAX * 85 / 100 )) && THROTTLED=$((THROTTLED+1))
-	echo "$1,$2,${MODE:-?},$CPUMAX,$tj,$cpu,$gpu,$rpm,$pwm,$cf,$gf,$(jt_power_mw 1),$(jt_power_mw 2),$(jt_power_mw 3)" >> "$OUT"
+	echo "$1,$2,${MODE:-?},$CPUMAX,$tj,$tjmc,$cpu,$gpu,$rpm,$pwm,$cf,$gf,$(jt_power_mw 1),$(jt_power_mw 2),$(jt_power_mw 3)" >> "$OUT"
 	printf "  %5ss %-4s Tj %2sC  fan %-5s PWM %-4s cpu %4sMHz gpu %4sMHz  %5sm W\n" \
 		"$1" "$2" "$tj" "$rpm" "$pwm" "$cf" "$gf" "$(jt_power_mw 1)"
 }
@@ -130,9 +134,9 @@ echo
 echo "=== summary ==="
 awk -F, -v thr="$THROTTLED" '
 	NR>1 && $2=="load" {
-		n++; s+=$5; if($5>mx)mx=$5; if($8>rmx)rmx=$8; p+=$12;
-		if(cmin==0||$10<cmin)cmin=$10; if($10>cmx)cmx=$10;
-		t[n]=$1; y[n]=$5
+		n++; s+=$5; if($5>mx)mx=$5; if($9>rmx)rmx=$9; p+=$13;
+		if(cmin==0||$11<cmin)cmin=$11; if($11>cmx)cmx=$11;
+		t[n]=$1; y[n]=$6/1000.0
 	}
 	END{
 		if(n==0){print "  no load samples"; exit}
@@ -144,7 +148,7 @@ awk -F, -v thr="$THROTTLED" '
 		for(i=st;i<=n;i++){k++; sx+=t[i]; sy+=y[i]; sxy+=t[i]*y[i]; sxx+=t[i]*t[i]}
 		if(k>2 && (k*sxx-sx*sx)!=0){
 			slope=(k*sxy-sx*sy)/(k*sxx-sx*sx)*60
-			printf "  final-third drift: %+.2f C/min\n", slope
+			printf "  final-third drift: %+.3f C/min (from millidegree samples)\n", slope
 			if(slope>0.5)      print "  VERDICT: STILL CLIMBING - not converged, extend the soak"
 			else if(slope>0.1) print "  VERDICT: slow drift - marginal, longer soak advised"
 			else               print "  VERDICT: CONVERGED - thermally stable at this load"
