@@ -1,6 +1,8 @@
 // Heavy multi-engine GPU load for Jetson Orin (sm_87) thermal soak.
 // Runs three concurrent streams: tensor-core HMMA, DRAM streaming, FP32 FMA.
-// Usage: gpu_burn2 <seconds>
+// Usage: gpu_burn <seconds> [working_set_MB]   (or GPU_BURN_MB=<n>)
+//   working_set_MB defaults to 512. It must exceed L2 to generate DRAM traffic;
+//   it is clamped to 80% of free memory, which matters on unified-memory Jetson.
 #include <cstdio>
 #include <cstdlib>
 #include <ctime>
@@ -63,13 +65,37 @@ __global__ void fp_burn(float *out, int iters) {
 
 int main(int argc, char **argv) {
 	int secs = (argc > 1) ? atoi(argv[1]) : 60;
+	// Working set in MB. Override via argv[2] or GPU_BURN_MB.
+	long want_mb = 512;
+	if (argc > 2) want_mb = atol(argv[2]);
+	else if (const char *e = getenv("GPU_BURN_MB")) want_mb = atol(e);
+	if (want_mb < 1) { fprintf(stderr, "working set must be >= 1 MB\n"); return 1; }
 
 	cudaDeviceProp p;
 	if (cudaGetDeviceProperties(&p, 0) != cudaSuccess) { fprintf(stderr, "no CUDA device\n"); return 1; }
 	int sms = p.multiProcessorCount;
 
-	// ~512 MB working set: far larger than L2, so every pass goes to DRAM.
-	size_t bytes = 512ull << 20;
+	// The buffer must exceed L2 so every pass reaches DRAM; below that the
+	// kernel measures cache bandwidth and the SOC power rail stays idle.
+	size_t l2_mb = (size_t)p.l2CacheSize >> 20;
+	if ((size_t)want_mb <= l2_mb) {
+		fprintf(stderr, "warning: %ld MB is within the %zu MB L2 cache - "
+		        "this will not generate DRAM traffic\n", want_mb, l2_mb);
+	}
+
+	// Jetson memory is unified: an oversized buffer starves the OS rather than
+	// failing cleanly. Cap at 80%% of free device memory.
+	size_t freeb = 0, totalb = 0;
+	if (cudaMemGetInfo(&freeb, &totalb) == cudaSuccess) {
+		size_t cap_mb = (freeb >> 20) * 8 / 10;
+		if ((size_t)want_mb > cap_mb) {
+			fprintf(stderr, "warning: clamping %ld MB to %zu MB (80%% of %zu MB free)\n",
+			        want_mb, cap_mb, freeb >> 20);
+			want_mb = (long)cap_mb;
+		}
+	}
+
+	size_t bytes = (size_t)want_mb << 20;
 	size_t n4 = bytes / sizeof(float4);
 
 	half *d_a = nullptr, *d_b = nullptr;
@@ -88,8 +114,8 @@ int main(int argc, char **argv) {
 	cudaStream_t s_tc, s_bw, s_fp;
 	cudaStreamCreate(&s_tc); cudaStreamCreate(&s_bw); cudaStreamCreate(&s_fp);
 
-	printf("GPU %s  SMs=%d  CC=%d.%d  working set=%zuMB  duration=%ds\n",
-	       p.name, sms, p.major, p.minor, bytes >> 20, secs);
+	printf("GPU %s  SMs=%d  CC=%d.%d  L2=%zuMB  working set=%zuMB  duration=%ds\n",
+	       p.name, sms, p.major, p.minor, l2_mb, bytes >> 20, secs);
 	printf("streams: tensor-core HMMA | DRAM streaming | FP32 FMA\n");
 	fflush(stdout);
 

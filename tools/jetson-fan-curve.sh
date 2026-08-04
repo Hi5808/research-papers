@@ -37,10 +37,16 @@ done
 jt_detect
 [[ -n $JT_FAN_CONF ]] || { echo "ERROR: no nvfancontrol config found. Passive board?" >&2; exit 1; }
 
-# Highest RPM mentioned in the config = the fan's declared ceiling.
+# The fan's declared ceiling = highest RPM in the config. Read it from the
+# OLDEST backup when one exists, not the live file: --max deliberately writes an
+# unreachable target, so detecting from the live config would inherit that
+# inflated value and compound on every subsequent run.
 if [[ -z $RPM_MAX ]]; then
-	RPM_MAX=$(grep -oP '^\s*\d+\s+\d+\s+\d+\s+\K\d+' "$JT_FAN_CONF" 2>/dev/null | sort -n | tail -1)
+	RPM_SRC=$(ls -1tr "$JT_FAN_CONF".bak.* 2>/dev/null | head -1)
+	RPM_SRC=${RPM_SRC:-$JT_FAN_CONF}
+	RPM_MAX=$(grep -oP '^\s*\d+\s+\d+\s+\d+\s+\K\d+' "$RPM_SRC" 2>/dev/null | sort -n | tail -1)
 	RPM_MAX=${RPM_MAX:-6000}
+	[[ $RPM_SRC != "$JT_FAN_CONF" ]] && echo "fan ceiling ${RPM_MAX} RPM (from stock backup $(basename "$RPM_SRC"))"
 fi
 
 show_curve() {

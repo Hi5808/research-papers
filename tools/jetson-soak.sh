@@ -8,6 +8,7 @@
 #   ./jetson-soak.sh                       # 10 min load, default phases
 #   ./jetson-soak.sh --load 1800           # 30 min soak
 #   ./jetson-soak.sh --load 600 --no-gpu   # CPU only
+#   ./jetson-soak.sh --load 900 --gpu-mb 2048   # larger DRAM working set
 #
 set -uo pipefail
 DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
@@ -15,7 +16,7 @@ DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 source "$DIR/jetson_thermal_lib.sh"
 
 BASELINE=60; LOAD=600; COOL=120; INTERVAL=5
-USE_GPU=1; USE_CPU=1; OUT=""; EXPECT_CPU_MHZ=""
+USE_GPU=1; USE_CPU=1; OUT=""; EXPECT_CPU_MHZ=""; GPU_MB=""
 
 while [[ $# -gt 0 ]]; do
 	case $1 in
@@ -24,6 +25,7 @@ while [[ $# -gt 0 ]]; do
 		--cooldown) COOL=$2; shift ;;
 		--interval) INTERVAL=$2; shift ;;
 		--out) OUT=$2; shift ;;
+		--gpu-mb) GPU_MB=$2; shift ;;
 		--no-gpu) USE_GPU=0 ;;
 		--no-cpu) USE_CPU=0 ;;
 		--expect-cpu-mhz) EXPECT_CPU_MHZ=$2; shift ;;
@@ -119,7 +121,7 @@ if [[ -n $CPU_CMD ]]; then
 elif (( USE_CPU )); then
 	for ((i=0;i<NPROC;i++)); do (timeout $((LOAD+15)) bash -c 'while :; do :; done') & PIDS+=($!); done
 fi
-[[ -n $GPU_BIN ]] && { "$GPU_BIN" $((LOAD+15)) >/dev/null 2>&1 & PIDS+=($!); }
+[[ -n $GPU_BIN ]] && { "$GPU_BIN" $((LOAD+15)) ${GPU_MB:+$GPU_MB} >/dev/null 2>&1 & PIDS+=($!); }
 sleep 2
 run_phase load "$LOAD"
 for p in "${PIDS[@]}"; do kill "$p" 2>/dev/null; done

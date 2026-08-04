@@ -1,16 +1,30 @@
 # Fan Curve Tuning on Jetson Orin: The Thermal-Margin Encoding Trap
 
-**Platform:** NVIDIA Jetson Orin Nano 8GB class, P3767 carrier (6× A78AE, 8 SM Ampere, 1728 MHz / 1020 MHz at MAXN_SUPER)
+**Platform:** NVIDIA Jetson Orin Nano 8GB (module P3767-0003) on a Seeed Studio reComputer J401 carrier
 **Software stack:** JetPack 7.x, L4T R39.2.0, CUDA 13.2, nvfancontrol (stock)
 **Date:** August 2026
 
-> **Platform identification note.** The device tree on this unit reports
-> `NVIDIA Jetson Orin NX Engineering Reference Developer Kit Super` and the fan
-> config resolves to `nvfancontrol_p3767_0000.conf`, while the CPU count (6) and
-> clock ceilings match an Orin Nano 8GB Super rather than an Orin NX 16GB (8
-> cores). Reference-carrier DT strings are not a reliable module identifier.
-> Absolute temperatures below are specific to this unit; the encoding, methods
-> and failure modes are not.
+> **Platform identification note.** The device tree `model` string on this unit
+> reads `NVIDIA Jetson Orin NX Engineering Reference Developer Kit Super`, which
+> is incorrect. The hardware identifiers agree it is an Orin Nano 8GB:
+>
+> ```
+> TNSPEC      3767-301-0003-F.1-1-0-recomputer-orin-j401-
+> compatible  nvidia,p3768-0000+p3767-0003-super / nvidia,p3767-0003
+> 7.4 GiB RAM · 6x Cortex-A78AE · 8 SM · 128-bit LPDDR5
+> ```
+>
+> Two traps for anyone identifying a Jetson from software. The DT `model` string
+> is free text set by the BSP and can name the wrong module entirely — use
+> `/etc/nv_boot_control.conf` TNSPEC or the `compatible` property. And the fan
+> config resolves to `nvfancontrol_p3767_0000.conf` on a `p3767-0003` module,
+> because NVIDIA ships one config for the whole P3767 family; the filename is
+> not a SKU identifier.
+>
+> The carrier matters for every temperature reported here. A reComputer J401 has
+> its own heatsink, fan and airflow path, and results will not transfer to an
+> NVIDIA P3768 devkit or a different enclosure. The encoding, methods and
+> failure modes do transfer.
 
 ## Abstract
 
@@ -18,7 +32,8 @@ NVIDIA's `nvfancontrol` fan curve configuration on Jetson Orin encodes its tempe
 
 ## Key Finding #1: The TEMP Column Is Margin, Not Temperature
 
-The stock `quiet` profile on a P3767-0000 reads as follows:
+The stock `quiet` profile (from `nvfancontrol_p3767_0000.conf`, which serves the
+whole P3767 family) reads as follows:
 
 ```
 <FAN 1>
@@ -303,12 +318,12 @@ Note that `/etc/nvpower/nvfancontrol/*.conf` is a stock NVIDIA file and may be o
 
 ## Limitations
 
-- **Single unit, single ambient.** No ambient temperature control; results are from one P3767-0000 in open air. Absolute temperatures will shift with enclosure and room conditions.
+- **Single unit, single carrier, single ambient.** No ambient temperature control; results are from one Orin Nano 8GB on a reComputer J401 carrier in open air. Absolute temperatures will shift with carrier, heatsink, enclosure and room conditions — the carrier especially, since it owns the entire cooling assembly.
 - **Load duration is short relative to the question asked.** The MAXN_SUPER run reached fan saturation at t≈155 s and sat at 60 °C for the final 115 s. Temperature was flat but the system was at its cooling ceiling, so a longer run may drift upward. A 300 s phase is sufficient to locate the equilibrium and insufficient to prove it is stable over hours.
 - **Synthetic load.** `stress` plus an FMA kernel is a thermal worst case, not a representative inference workload. Real TensorRT pipelines have duty cycles that produce lower sustained temperatures, and do not load CPU and GPU simultaneously at full occupancy.
 - **Ambient uncontrolled.** The +0.5 °C movement in the final quarter of the 30-minute soak is within the range a warming room would produce, and no ambient sensor was logged. Distinguishing residual device drift from room drift requires an external probe.
 - **30 minutes is not 30 days.** The soak establishes that the thermal design converges. It says nothing about dust accumulation, fan bearing wear, or seasonal ambient swings, all of which move the equilibrium over a deployment lifetime.
-- **Margin encoding verified on P3767-0000 only.** Other Jetson modules ship different `nvfancontrol_*.conf` files and may not enable `TMARGIN`. Check for the directive before assuming the conversion applies.
+- **Margin encoding verified on this module/BSP only.** Other Jetson modules ship different `nvfancontrol_*.conf` files and may not enable `TMARGIN`. Check for the directive before assuming the conversion applies.
 - Comparisons against previously published figures from this platform are invalid unless fan curve and `nvpmodel` mode both match, since both affect sustained-clock behavior.
 
 ## Raw Data

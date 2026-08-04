@@ -34,7 +34,7 @@ converts internally.
 | `jetson_thermal_lib.sh` | Runtime detection of thermal zones, fan, INA3221, GPU devfreq, fan config, thermal limit, TMARGIN. Source it from your own scripts. |
 | `jetson-fan-curve.sh` | Inspect and set the fan curve, in degrees C. |
 | `jetson-soak.sh` | Sustained load soak with CSV logging and thermal-runaway detection. |
-| `gpu_burn.cu` | Multi-engine GPU load: tensor cores, DRAM streaming, FP32. |
+| `gpu_burn.cu` | Multi-engine GPU load: tensor cores, DRAM streaming, FP32. Working set sizeable via `gpu_burn <secs> <MB>` or `GPU_BURN_MB`. |
 | `build-gpu-burn.sh` | Builds `gpu_burn` for the local compute capability. |
 
 ## Quick start
@@ -60,6 +60,13 @@ sudo ./jetson-fan-curve.sh --restore    # revert the newest backup
 Every write is backed up alongside the config first. `--profile cool` targets
 the other stock profile; `JT_RPM_MAX=7000` overrides the detected fan ceiling.
 
+The fan ceiling is detected from the **oldest** backup rather than the live
+config. This is deliberate: `--max` writes an intentionally unreachable RPM
+target, so detecting from the live file would inherit that inflated number and
+compound it on each subsequent run. If you have no backups yet, the live config
+is used — so take a backup before your first `--max` if you care about the
+detected ceiling being the stock one, or just pass `JT_RPM_MAX`.
+
 **After any change, verify the direction of response.** Fan RPM must *rise* as
 Tj rises. If it falls, the encoding on your board is the opposite of what was
 detected — restore immediately.
@@ -79,7 +86,15 @@ noise; this is a test mode, not a daily driver.
 ./jetson-soak.sh --load 1800                    # 30 min soak
 ./jetson-soak.sh --load 600 --no-gpu            # CPU only
 ./jetson-soak.sh --load 900 --expect-cpu-mhz 1700
+./jetson-soak.sh --load 900 --gpu-mb 2048       # larger DRAM working set
 ```
+
+`--gpu-mb` sets the GPU streaming buffer (default 512 MB). It must exceed L2 —
+2 MB on Orin — or the kernel measures cache bandwidth and generates no DRAM
+traffic at all, which is exactly the mistake that made an early version of this
+tooling under-report power by a third. It is clamped to 80% of free memory,
+which matters on Jetson because memory is unified: an oversized buffer starves
+the OS rather than failing cleanly.
 
 Runs unprivileged. Writes a CSV of Tj, CPU/GPU temperatures, fan RPM and PWM,
 CPU and GPU clocks, and three INA3221 power rails at a fixed interval, then
@@ -131,11 +146,22 @@ automated comparison between power modes.
   duty cycles run cooler.
 - **Idle cost is permanent.** An aggressive curve that drops idle temperature
   by 7 °C may double idle fan speed. That noise is paid continuously.
+- **Results are carrier-specific.** The carrier board owns the heatsink, fan and
+  airflow path, so absolute temperatures do not transfer between an NVIDIA devkit
+  and a third-party carrier even with an identical module and curve.
 
 ## Compatibility
 
-Developed and verified on an Orin Nano Super class dev kit (P3767 carrier,
-JetPack 7 / L4T R39.2, CUDA 13.2). The detection layer is written against
+Developed and verified on a Jetson Orin Nano 8GB (module P3767-0003) on a
+Seeed reComputer J401 carrier, JetPack 7 / L4T R39.2, CUDA 13.2.
+
+A note on identifying your own board: the device-tree `model` string is free
+text set by the BSP and can be flatly wrong — the unit above reports itself as
+an "Orin NX Engineering Reference Developer Kit". `jetson_thermal_lib.sh` prints
+it because it is useful context, not because it is authoritative. For the real
+module, read `/etc/nv_boot_control.conf` (TNSPEC) or
+`/proc/device-tree/compatible`. Likewise `nvfancontrol_p3767_0000.conf` serves
+the entire P3767 family, so the config filename is not a SKU either. The detection layer is written against
 generic Jetson sysfs and should work on Orin NX/AGX and Xavier; the tensor-core
 path in `gpu_burn.cu` falls back to FP32 below `sm_70` for Nano/TX2 class
 hardware. It has not been tested on those boards — `--show` is read-only and is
