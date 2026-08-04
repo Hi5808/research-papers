@@ -81,15 +81,17 @@ Seven concrete bugs found while building a 7-model IT-operations diagnostic suit
 
 ---
 
-### 5. Does Domain-Specialist Fine-Tuning Beat a Generalist? A Negative Result and an Evaluation Methodology Fix
+### 5. Does Domain-Specialist Fine-Tuning Beat a Generalist? Four Rounds of Methodology Correction to Find Out
 
-Testing whether narrow domain fine-tuning outperforms a generalist model of the same size (1.5B) across four IT-operations domains — and the evaluation methodology bug that would have produced a confidently wrong answer if not caught first.
+Testing whether narrow domain fine-tuning outperforms a generalist model of the same size (1.5B) across four IT-operations domains. The final answer is a clean **yes across all four domains** — but it took a broken exact-keyword test, a corrected-but-shallow judge-based test finding no effect, a deeper judge-based test revealing a domain-dependent effect, and a proportionally-dosed deep-training-data intervention (which first had to fail once, on linux, before the dosing bug was caught) to actually detect it.
 
 **Key findings:**
 - Exact-keyword test matching produces false negatives on genuinely correct answers using valid alternative implementations
 - 3-question smoke tests produce non-reproducible pass/fail results from LLM sampling variance alone, even at low temperature
 - LLM-as-judge scoring with a single-dimension rubric + Wilson confidence intervals recovers a statistically honest comparison
-- Result: no statistically detectable specialist advantage over a generalist at 1.5B scale and current data volumes — a genuine negative result, not a broken test
+- Test *depth*, not just sample size, determines whether an evaluation can detect a real effect — a shallow test set found nothing; adding multi-hop scenarios revealed a real, domain-dependent effect the shallow test was structurally incapable of surfacing
+- Training data interventions must be dosed *proportionally* to each dataset's size, not as a fixed absolute count — the same fixed addition that reversed networking's result (50%→85% pass rate) initially made linux *worse*, purely because linux's larger pre-existing dataset diluted the same absolute addition
+- Final result: all four domains show a clear specialist advantage (55-85% pass rate vs. 30-70% for the generalist) once evaluation and training-data dosing were both corrected with matching rigor
 
 **Platform:** NVIDIA RTX 5090 32GB, AMD Ryzen 7 9700X | **Date:** July 2026
 
