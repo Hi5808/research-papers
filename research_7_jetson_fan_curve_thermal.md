@@ -24,7 +24,8 @@
 > The carrier matters for every temperature reported here. The reComputer J3011
 > pairs the module with a J401 carrier and its own heatsink, fan and airflow
 > path, so absolute temperatures will not transfer to an NVIDIA P3768 devkit or
-> any other enclosure. The encoding, methods and failure modes do transfer.
+> any other enclosure. All measurements here were taken with the stock case
+> closed. The encoding, methods and failure modes do transfer.
 
 ## Abstract
 
@@ -250,6 +251,11 @@ system sustains pinned maximum clocks indefinitely at 28 °C below the 95 °C
 throttle trip, with no throttled samples in 30 minutes. On this hardware the
 thermal solution is not the constraint at any available power mode.
 
+This was measured **inside the stock closed aluminium enclosure**, not on an
+open bench, which makes it the configuration the product actually ships in
+rather than a best case. The J3011's passive case and carrier fan together
+absorb a 20 W sustained load with 28 °C of margin.
+
 The residual movement in quarters 3–4 is approximately 1 °C of wander, not a
 trend — see the methodology note below before reading it as one.
 
@@ -318,7 +324,7 @@ Note that `/etc/nvpower/nvfancontrol/*.conf` is a stock NVIDIA file and may be o
 
 ## Limitations
 
-- **Single unit, single carrier, single ambient.** No ambient temperature control; results are from one Orin Nano 8GB in a reComputer J3011. Absolute temperatures will shift with carrier, heatsink, enclosure and room conditions — the carrier especially, since it owns the entire cooling assembly.
+- **Single unit, single ambient.** No ambient temperature control and no external airflow; results are from one reComputer J3011 in its stock closed aluminium enclosure at room temperature. Absolute temperatures will shift with ambient and with any change to the cooling assembly.
 - **Load duration is short relative to the question asked.** The MAXN_SUPER run reached fan saturation at t≈155 s and sat at 60 °C for the final 115 s. Temperature was flat but the system was at its cooling ceiling, so a longer run may drift upward. A 300 s phase is sufficient to locate the equilibrium and insufficient to prove it is stable over hours.
 - **Synthetic load.** `stress` plus an FMA kernel is a thermal worst case, not a representative inference workload. Real TensorRT pipelines have duty cycles that produce lower sustained temperatures, and do not load CPU and GPU simultaneously at full occupancy.
 - **Ambient uncontrolled.** The +0.5 °C movement in the final quarter of the 30-minute soak is within the range a warming room would produce, and no ambient sensor was logged. Distinguishing residual device drift from room drift requires an external probe.
