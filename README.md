@@ -12,7 +12,7 @@ Have questions about these findings or interested in consulting? Get in touch:
 
 ## Edge AI Deployment on Constrained Hardware
 
-Production deployments of vision-language models and real-time detection on NVIDIA Jetson Orin Nano 8GB.
+Production deployments of vision-language models and real-time detection on a Seeed Studio reComputer J3011 (NVIDIA Jetson Orin Nano 8GB, J401 carrier) — production edge hardware rather than an NVIDIA developer kit.
 
 ### 1. Vision-Language Models on Edge Hardware: JetPack 7.2 Deployment Patterns
 
@@ -23,7 +23,7 @@ Deployment of Qwen2-VL-2B on Jetson Orin Nano with unified-memory OOM patterns, 
 - Unified-memory OOM pattern and fix (device_map='cuda:0', low_cpu_mem_usage=True)
 - Native transformers models superior to custom-code models for stability
 
-**Platform:** NVIDIA Jetson Orin Nano 8GB | **Date:** July 2026
+**Platform:** reComputer J3011 (Jetson Orin Nano 8GB) | **Date:** July 2026
 
 [Read full paper →](research_1_vlm_edge_deployment.md)
 
@@ -39,7 +39,7 @@ YOLOv8n object detection optimization achieving 1.7x speedup over PyTorch (30ms 
 - Speedup valuable for headroom and multi-model concurrency, not hard real-time requirements
 - Capture/encode becomes bottleneck once inference reaches 17ms
 
-**Platform:** NVIDIA Jetson Orin Nano 8GB | **Date:** July 2026
+**Platform:** reComputer J3011 (Jetson Orin Nano 8GB) | **Date:** July 2026
 
 [Read full paper →](research_2_tensorrt_optimization.md)
 
@@ -55,7 +55,7 @@ Running VLM + TensorRT detector simultaneously on 8GB unified memory: process co
 - Baseline system load (GUI, apps) creates invisible floor in development environments
 - Achieved 29 FPS detection + 5-7s captioning concurrently with 116MB memory margin
 
-**Platform:** NVIDIA Jetson Orin Nano 8GB | **Date:** July 2026
+**Platform:** reComputer J3011 (Jetson Orin Nano 8GB) | **Date:** July 2026
 
 [Read full paper →](research_3_unified_memory_multimodel.md)
 
@@ -130,7 +130,7 @@ An undocumented encoding in NVIDIA's `nvfancontrol` configuration causes fan-cur
 - At full clocks the equilibrium is set by the fan's maximum rather than the curve's shape, so no further profile tuning can improve that operating point; the remaining levers are power cap or ambient
 - `nvpmodel -m 2` returned success, logged as applied, and silently reverted — it requires a reboot to take effect. Only the achieved clocks revealed the first run had executed at the previous power cap; Jetson benchmarks must gate collection on achieved clocks, not requested mode
 
-**Platform:** NVIDIA Jetson Orin Nano 8GB | **Date:** August 2026
+**Platform:** reComputer J3011 (Jetson Orin Nano 8GB) | **Date:** August 2026
 
 [Read full paper →](research_7_jetson_fan_curve_thermal.md) · Raw data: [25 W](data/thermal-20260803-25W-combined-load.csv) · [MAXN_SUPER](data/thermal-20260803-MAXN_SUPER-combined-load.csv)
 
@@ -138,7 +138,7 @@ An undocumented encoding in NVIDIA's `nvfancontrol` configuration causes fan-cur
 
 ## About
 
-Papers 1-3 document research from production deployments on NVIDIA Jetson Orin Nano 8GB hardware, emphasizing practical systems-level challenges in edge AI deployment. Papers 4-5 document findings from building and evaluating a multi-model small-LLM fine-tuning pipeline, emphasizing failure modes that produce valid-looking but degraded artifacts, and the evaluation rigor required to trust A/B comparisons between fine-tuned models. Paper 6 documents hardware-level board bring-up, covering device-discovery methodology and firmware-flashing tool regressions under real-world host constraints. Paper 7 returns to the Jetson platform at the thermal and power-management layer, documenting a configuration-encoding trap and the measurement discipline required for trustworthy thermal benchmarks.
+Papers 1-3 document research from production deployments on a Seeed Studio reComputer J3011 (Jetson Orin Nano 8GB on a J401 carrier), emphasizing practical systems-level challenges in edge AI deployment. Papers 4-5 document findings from building and evaluating a multi-model small-LLM fine-tuning pipeline, emphasizing failure modes that produce valid-looking but degraded artifacts, and the evaluation rigor required to trust A/B comparisons between fine-tuned models. Paper 6 documents hardware-level board bring-up, covering device-discovery methodology and firmware-flashing tool regressions under real-world host constraints. Paper 7 returns to the Jetson platform at the thermal and power-management layer, documenting a configuration-encoding trap and the measurement discipline required for trustworthy thermal benchmarks.
 
 ## Citation
 

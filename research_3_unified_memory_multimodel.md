@@ -1,6 +1,6 @@
 # Multi-Model Concurrency on Unified-Memory Edge Hardware: The Memory Accounting Problem
 
-**Platform:** NVIDIA Jetson Orin Nano 8GB  
+**Platform:** Seeed Studio reComputer J3011 — NVIDIA Jetson Orin Nano 8GB (module P3767-0003) on a J401 carrier, not an NVIDIA developer kit  
 **Software stack:** JetPack 7.2, L4T R39.2, CUDA 13.2, PyTorch 2.13.0+cu130, TensorRT 10.16.2, bitsandbytes 0.49.2  
 **Date:** July 2026
 

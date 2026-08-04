@@ -1,6 +1,6 @@
 # Fan Curve Tuning on Jetson Orin: The Thermal-Margin Encoding Trap
 
-**Platform:** NVIDIA Jetson Orin Nano 8GB (module P3767-0003) on a Seeed Studio reComputer J401 carrier
+**Platform:** Seeed Studio reComputer J3011 — NVIDIA Jetson Orin Nano 8GB (module P3767-0003) on a J401 carrier, not an NVIDIA developer kit
 **Software stack:** JetPack 7.x, L4T R39.2.0, CUDA 13.2, nvfancontrol (stock)
 **Date:** August 2026
 
@@ -21,10 +21,10 @@
 > because NVIDIA ships one config for the whole P3767 family; the filename is
 > not a SKU identifier.
 >
-> The carrier matters for every temperature reported here. A reComputer J401 has
-> its own heatsink, fan and airflow path, and results will not transfer to an
-> NVIDIA P3768 devkit or a different enclosure. The encoding, methods and
-> failure modes do transfer.
+> The carrier matters for every temperature reported here. The reComputer J3011
+> pairs the module with a J401 carrier and its own heatsink, fan and airflow
+> path, so absolute temperatures will not transfer to an NVIDIA P3768 devkit or
+> any other enclosure. The encoding, methods and failure modes do transfer.
 
 ## Abstract
 
@@ -318,13 +318,21 @@ Note that `/etc/nvpower/nvfancontrol/*.conf` is a stock NVIDIA file and may be o
 
 ## Limitations
 
-- **Single unit, single carrier, single ambient.** No ambient temperature control; results are from one Orin Nano 8GB on a reComputer J401 carrier in open air. Absolute temperatures will shift with carrier, heatsink, enclosure and room conditions — the carrier especially, since it owns the entire cooling assembly.
+- **Single unit, single carrier, single ambient.** No ambient temperature control; results are from one Orin Nano 8GB in a reComputer J3011. Absolute temperatures will shift with carrier, heatsink, enclosure and room conditions — the carrier especially, since it owns the entire cooling assembly.
 - **Load duration is short relative to the question asked.** The MAXN_SUPER run reached fan saturation at t≈155 s and sat at 60 °C for the final 115 s. Temperature was flat but the system was at its cooling ceiling, so a longer run may drift upward. A 300 s phase is sufficient to locate the equilibrium and insufficient to prove it is stable over hours.
 - **Synthetic load.** `stress` plus an FMA kernel is a thermal worst case, not a representative inference workload. Real TensorRT pipelines have duty cycles that produce lower sustained temperatures, and do not load CPU and GPU simultaneously at full occupancy.
 - **Ambient uncontrolled.** The +0.5 °C movement in the final quarter of the 30-minute soak is within the range a warming room would produce, and no ambient sensor was logged. Distinguishing residual device drift from room drift requires an external probe.
 - **30 minutes is not 30 days.** The soak establishes that the thermal design converges. It says nothing about dust accumulation, fan bearing wear, or seasonal ambient swings, all of which move the equilibrium over a deployment lifetime.
 - **Margin encoding verified on this module/BSP only.** Other Jetson modules ship different `nvfancontrol_*.conf` files and may not enable `TMARGIN`. Check for the directive before assuming the conversion applies.
 - Comparisons against previously published figures from this platform are invalid unless fan curve and `nvpmodel` mode both match, since both affect sustained-clock behavior.
+
+## Tooling
+
+The scripts used here are published separately as
+[**jetson-tools**](https://github.com/Hi5808/jetson-tools) — runtime platform
+detection, a fan-curve editor that speaks in degrees Celsius, and the soak
+harness with the achieved-clock gate and millidegree drift regression described
+above.
 
 ## Raw Data
 
