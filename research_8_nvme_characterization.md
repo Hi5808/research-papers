@@ -10,27 +10,48 @@
 > [paper 7](research_7_jetson_fan_curve_thermal.md): the DT `model` string is
 > free text set by the BSP and can name hardware that is not present.
 >
-> Four independent identifiers place the hardware, listed weakest to strongest:
+> Five identifiers place the hardware. Four are software and one is not:
 >
 > ```
 > DT compatible   nvidia,p3768-0000+p3767-0000-super / nvidia,p3767-0000
 > DT chosen/sku   699-13767-0000-300 H.2      (3767-0000 = Orin NX 16GB)
 > TNSPEC          3767-300-0000-H.2-1-0-recomputer-orin-j401-
 > flashed image   mfi_recomputer-orin-nx-16g-j401-7.2.0-39.2.0-2026-06-18.tar.gz
+> module EEPROM   i2c 0x50: "699-13767-0000-300 H.2", serial 1420123084939
 > ```
 >
-> Note that `compatible` names the **p3768-0000 NVIDIA reference carrier**,
-> which is not what this board is — Seeed derives its BSP from NVIDIA's and the
-> string is inherited. TNSPEC is better but is written at flash time and
-> describes the flashing config, not necessarily the silicon. The decisive
-> source is the image name recorded in `/etc/nv_tegra_release`, which names the
-> module capacity and the carrier together: `orin-nx-16g-j401`. A J401 carrier
-> carrying an Orin NX 16GB is sold as the **reComputer J4012**.
+> The first four are all written by the BSP and inherit each other's mistakes.
+> `compatible` names the **p3768-0000 NVIDIA reference carrier**, which is not
+> what this board is — Seeed derives its BSP from NVIDIA's and the string comes
+> along unchanged. `TNSPEC` is better but is written at flash time and describes
+> the flashing configuration, not the silicon.
+>
+> **The module EEPROM is the one source that is not software.** It is a physical
+> chip on the module and is indifferent to what image was flashed. It
+> cross-checks against three independent values: its part number matches
+> `chosen/sku`, its serial matches the device tree `serial-number`, and the MAC
+> at offset 0x44 (`19 de d8 2d b0 48`) is the `enP8p1s0` address `48:b0:2d:d8:de:19`
+> stored byte-reversed. The module is therefore confirmed as P3767-0000,
+> Orin NX 16GB, against the hardware rather than against a config file.
+>
+> **The carrier is a different matter.** The carrier EEPROM at i2c 0x57 is 256
+> bytes of `0x00` — unprogrammed — verified as a true blank rather than a failed
+> read by the module EEPROM responding correctly on the same bus with the same
+> method. **The carrier SKU is therefore not recoverable in software at all.**
+> The carrier is identified as a J401 by the flashed image name and by physical
+> I/O: the NVIDIA p3768 developer kit has DisplayPort and no HDMI port, whereas
+> this board reports `card0-HDMI-A-1` connected, and the J401's CAN connector,
+> USB-C device-mode port, M.2 Key M + Key E, and Realtek RTL8111 GbE all match
+> what enumerates. A J401 carrying an Orin NX 16GB is sold as the
+> **reComputer J4012**. The specific carrier revision is printed on the PCB
+> silkscreen and nowhere else.
+>
+> Two unprogrammed identity chips appear in this report — this carrier EEPROM
+> and the SSD's PCI subsystem ID (Finding #1). Neither is a fault; both are the
+> same economy, and both mean provenance has to be established by measurement.
 >
 > Corroborating: 15 GiB usable RAM and 8x Cortex-A78AE (CPU part `0xd42`) match
 > Orin NX 16GB and rule out the 8 GB P3767-0001 and the 6-core Orin Nano SKUs.
-> PCIe enumerates three root ports — M.2 M-key (the drive under test), M.2
-> E-key (an Intel 7260), and a Realtek RTL8111 GbE.
 >
 > This matters for every thermal statement below. The M.2 slot sits on a J401
 > carrier with its own airflow path, not in an NVIDIA reference enclosure.
