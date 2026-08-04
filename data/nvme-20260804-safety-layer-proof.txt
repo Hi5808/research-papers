@@ -1,0 +1,8 @@
+These MUST all be refused with exit 64:
+  nvme format          -> REFUSED: nvme format is not on the read-only allowlist
+  nvme sanitize        -> REFUSED: nvme sanitize is not on the read-only allowlist
+  nvme set-feature     -> REFUSED: nvme set-feature is not on the read-only allowlist
+  nvme write           -> REFUSED: nvme write is not on the read-only allowlist
+  nvme fw-commit       -> REFUSED: nvme fw-commit is not on the read-only allowlist
+Raw fio without --readonly MUST be refused:
+  fio-ro rw=write      -> REFUSED: raw-device fio requires --readonly
