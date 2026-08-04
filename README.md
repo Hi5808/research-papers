@@ -126,12 +126,13 @@ An undocumented encoding in NVIDIA's `nvfancontrol` configuration causes fan-cur
 - With `TMARGIN ENABLED`, the fan curve's temperature column is *margin below the 105 °C limit*, not degrees Celsius — an operator targeting 60 °C who writes `60` actually sets 45 °C, inverting their model of every subsequent edit
 - The encoding is verifiable on a live system three independent ways (kernel trip-point complements, reductio on the Celsius reading, and live RPM interpolation), though the interpolation test is degenerate at exactly half the limit temperature
 - The stock `quiet` profile holds the fan fully off until Tj 35 °C and below 4000 RPM until 94 °C — acoustically sensible, but it introduces unmeasured thermal variance into benchmarks
-- A retuned curve held Tj to 57 °C under sustained combined CPU+GPU load at 25 W, but with the fan at 94% of maximum — sufficient, not robust
-- `nvpmodel -m 2` returned success, logged as applied, and silently reverted; only the achieved clocks revealed the run had executed at the previous power cap. Jetson benchmarks must record achieved clocks, not requested mode
+- A retuned curve held Tj to 57 °C under sustained combined CPU+GPU load at 25 W, but reached exactly 60 °C at MAXN_SUPER with the fan saturated at its 6000 RPM ceiling — the target is met at the boundary, not within it
+- At full clocks the equilibrium is set by the fan's maximum rather than the curve's shape, so no further profile tuning can improve that operating point; the remaining levers are power cap or ambient
+- `nvpmodel -m 2` returned success, logged as applied, and silently reverted — it requires a reboot to take effect. Only the achieved clocks revealed the first run had executed at the previous power cap; Jetson benchmarks must gate collection on achieved clocks, not requested mode
 
 **Platform:** NVIDIA Jetson Orin Nano 8GB | **Date:** August 2026
 
-[Read full paper →](research_7_jetson_fan_curve_thermal.md) · [Raw data](data/thermal-20260803-25W-combined-load.csv)
+[Read full paper →](research_7_jetson_fan_curve_thermal.md) · Raw data: [25 W](data/thermal-20260803-25W-combined-load.csv) · [MAXN_SUPER](data/thermal-20260803-MAXN_SUPER-combined-load.csv)
 
 ---
 
