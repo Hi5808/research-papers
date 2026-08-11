@@ -157,9 +157,25 @@ A full non-destructive characterization of a 1 TB SSD of unknown provenance, per
 
 ---
 
+### 9. Desktop Strip and Performance Tuning on Jetson Orin NX 16GB: Reproducing the Orin Nano Result on a Different Module
+
+Reproduces the prior Orin Nano package-strip and clock/power/fan tuning study on an Orin NX 16GB unit on the same J401 carrier, testing whether the methodology transfers within the same module family rather than being an artifact of one board.
+
+**Key findings:**
+- The 135-package removal batch, the ported `max65` fan-curve profile, and both systemd drop-in fixes (`nvidia-cdi-refresh.service`, `nvpmodel.service`) all reproduced without modification
+- `nvpmodel` mode indices are **not portable across modules in the same family**: `MAXN_SUPER` is mode 2 on the Orin Nano SKU but mode 0 on this Orin NX SKU — applying the Nano's mode number verbatim would have silently selected the wrong power profile
+- Qwen3-1.7B-Instruct prefill throughput came out 35% higher (2732.9 vs 2025 tok/s), consistent with the NX's higher clocks and larger core count; decode stayed flat (63.5 vs 62.2 tok/s), consistent with a memory-bandwidth-bound phase
+- Sustained 500-iteration decode load pushed junction temperature to 69.6 °C at 26 W, the first live confirmation across this project's papers that the `max65` fan curve actually engages under load — the Nano study's own soak never naturally reached its 65 °C trigger
+
+**Platform:** reComputer J401 (Jetson Orin NX 16GB) | **Date:** August 2026
+
+[Read full paper →](research_9_orin_nx_strip_perf_tuning.md) · Raw data: [strip removal log](data/orinnx-20260810-strip-removal.log) · [sustained decode benchmark](data/orinnx-20260810-decode500-bench.log) · [tegrastats capture](data/orinnx-20260810-tegrastats-decode500.csv)
+
+---
+
 ## About
 
-Papers 1-3 document research from production deployments on a Seeed Studio reComputer J3011 (Jetson Orin Nano 8GB on a J401 carrier), emphasizing practical systems-level challenges in edge AI deployment. Papers 4-5 document findings from building and evaluating a multi-model small-LLM fine-tuning pipeline, emphasizing failure modes that produce valid-looking but degraded artifacts, and the evaluation rigor required to trust A/B comparisons between fine-tuned models. Paper 6 documents hardware-level board bring-up, covering device-discovery methodology and firmware-flashing tool regressions under real-world host constraints. Paper 7 returns to the Jetson platform at the thermal and power-management layer, documenting a configuration-encoding trap and the measurement discipline required for trustworthy thermal benchmarks. Paper 8 extends that measurement discipline to storage, characterizing an unbranded NVMe SSD non-destructively on a live system and treating the instrument itself as something requiring validation.
+Papers 1-3 document research from production deployments on a Seeed Studio reComputer J3011 (Jetson Orin Nano 8GB on a J401 carrier), emphasizing practical systems-level challenges in edge AI deployment. Papers 4-5 document findings from building and evaluating a multi-model small-LLM fine-tuning pipeline, emphasizing failure modes that produce valid-looking but degraded artifacts, and the evaluation rigor required to trust A/B comparisons between fine-tuned models. Paper 6 documents hardware-level board bring-up, covering device-discovery methodology and firmware-flashing tool regressions under real-world host constraints. Paper 7 returns to the Jetson platform at the thermal and power-management layer, documenting a configuration-encoding trap and the measurement discipline required for trustworthy thermal benchmarks. Paper 8 extends that measurement discipline to storage, characterizing an unbranded NVMe SSD non-destructively on a live system and treating the instrument itself as something requiring validation. Paper 9 returns to the strip-and-tune methodology of the early Nano papers, testing it on an Orin NX 16GB to separate what generalizes across a module family from what is board-specific and must be re-derived.
 
 ## Citation
 

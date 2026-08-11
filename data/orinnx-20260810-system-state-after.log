@@ -1,0 +1,13 @@
+NV Power Mode: MAXN_SUPER
+0
+---
+SOC family:tegra234  Machine:NVIDIA Jetson Orin NX Engineering Reference Developer Kit Super
+Error: Run this script(/usr/bin/jetson_clocks) as a root user
+---
+multi-user.target
+---
+  UNIT LOAD ACTIVE SUB DESCRIPTION
+
+0 loaded units listed.
+---
+1817

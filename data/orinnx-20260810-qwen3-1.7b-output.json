@@ -1,0 +1,24 @@
+{
+    "input_file": "/home/orinnx/tensorrt-edgellm-workspace/input_qwen.json",
+    "responses": [
+        {
+            "batch_idx": 0,
+            "finish_reason": "end-of-sequence",
+            "formatted_complete_request": "<|im_start|>user\nWhat is the capital of the United States?<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+            "formatted_system_prompt": "",
+            "messages": [
+                {
+                    "content": [
+                        {
+                            "text": "What is the capital of the United States?",
+                            "type": "text"
+                        }
+                    ],
+                    "role": "user"
+                }
+            ],
+            "output_text": "The capital of the United States of America is **Washington, D.C.** (Washington, District of Columbia). It is the seat of the federal government of the United States and serves as the political and administrative center for the country.",
+            "request_idx": 0
+        }
+    ]
+}

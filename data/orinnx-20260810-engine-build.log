@@ -1,0 +1,556 @@
+[sudo] password for orinnx: [21:04:35.448] [INFO] [llmBuilder.cpp:170:build] Using TRT_VERSION=10.16.2
+[21:04:35.448] [INFO] [llmBuilder.cpp:175:build] Using __LUNOWUD=-mlir:autotune:num_threads=1 -mlir:collective:fp4=off -cask_fusion:async_policy=1 -peep:fc_h_fusion=off
+[21:04:35.448] [INFO] [trtUtils.h:66:loadEdgellmPluginLib] EDGELLM_PLUGIN_PATH: /home/orinnx/TensorRT-Edge-LLM/build/libNvInfer_edgellm_plugin.so
+[21:04:35.487] [WARNING] [version.cpp:103:checkVersion] Model version 0.8.0 does not match runtime version 0.9.1. Consider re-exporting or re-building.
+[21:04:35.571] [INFO] [TensorRT] [MemUsageChange] Init CUDA: CPU +16, GPU +0, now: CPU 23, GPU 1119 (MiB)
+[21:04:35.890] [INFO] [llmBuilder.cpp:205:build] Parsing ONNX model: /home/orinnx/tensorrt-edgellm-workspace/Qwen3-1.7B-Instruct/onnx/llm/model.onnx
+[21:04:35.902] [INFO] [TensorRT] ----------------------------------------------------------------
+[21:04:35.902] [INFO] [TensorRT] Input filename:   /home/orinnx/tensorrt-edgellm-workspace/Qwen3-1.7B-Instruct/onnx/llm/model.onnx
+[21:04:35.903] [INFO] [TensorRT] ONNX IR version:  0.0.10
+[21:04:35.903] [INFO] [TensorRT] Opset version:    24
+[21:04:35.903] [INFO] [TensorRT] Producer name:    pytorch
+[21:04:35.903] [INFO] [TensorRT] Producer version: 2.12.0+cu130
+[21:04:35.903] [INFO] [TensorRT] Domain:           
+[21:04:35.903] [INFO] [TensorRT] Model version:    0
+[21:04:35.903] [INFO] [TensorRT] Doc string:       
+[21:04:35.903] [INFO] [TensorRT] ----------------------------------------------------------------
+[21:04:35.903] [WARNING] [TensorRT] ModelImporter.cpp:739: Make sure input last_token_ids has Int64 binding.
+[21:04:35.910] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:35.910] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:35.910] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:35.910] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:35.910] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:35.910] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:35.912] [INFO] [TensorRT] Searching for plugin: AttentionPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:35.912] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute attention_scale not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:35.912] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute enable_vision_block_attention not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.028] [INFO] [TensorRT] Successfully created plugin: AttentionPlugin
+[21:04:36.029] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.029] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.030] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.030] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.030] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.031] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.031] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.031] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.032] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.032] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.032] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.032] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.032] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.033] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.034] [INFO] [TensorRT] Searching for plugin: AttentionPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.034] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute attention_scale not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.034] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute enable_vision_block_attention not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.034] [INFO] [TensorRT] Successfully created plugin: AttentionPlugin
+[21:04:36.035] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.035] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.036] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.036] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.036] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.036] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.037] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.037] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.038] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.038] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.038] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.038] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.039] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.039] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.040] [INFO] [TensorRT] Searching for plugin: AttentionPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.040] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute attention_scale not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.040] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute enable_vision_block_attention not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.040] [INFO] [TensorRT] Successfully created plugin: AttentionPlugin
+[21:04:36.041] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.041] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.042] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.042] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.042] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.042] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.043] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.043] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.043] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.044] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.044] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.044] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.044] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.044] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.046] [INFO] [TensorRT] Searching for plugin: AttentionPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.046] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute attention_scale not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.046] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute enable_vision_block_attention not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.046] [INFO] [TensorRT] Successfully created plugin: AttentionPlugin
+[21:04:36.046] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.046] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.047] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.047] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.048] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.048] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.048] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.048] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.049] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.049] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.049] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.049] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.049] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.049] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.051] [INFO] [TensorRT] Searching for plugin: AttentionPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.051] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute attention_scale not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.051] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute enable_vision_block_attention not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.051] [INFO] [TensorRT] Successfully created plugin: AttentionPlugin
+[21:04:36.051] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.051] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.052] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.052] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.053] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.053] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.053] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.053] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.054] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.054] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.054] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.054] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.055] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.055] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.056] [INFO] [TensorRT] Searching for plugin: AttentionPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.056] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute attention_scale not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.056] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute enable_vision_block_attention not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.056] [INFO] [TensorRT] Successfully created plugin: AttentionPlugin
+[21:04:36.057] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.057] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.057] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.058] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.058] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.058] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.058] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.058] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.059] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.059] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.059] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.059] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.060] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.060] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.061] [INFO] [TensorRT] Searching for plugin: AttentionPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.061] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute attention_scale not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.061] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute enable_vision_block_attention not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.061] [INFO] [TensorRT] Successfully created plugin: AttentionPlugin
+[21:04:36.061] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.061] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.062] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.062] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.063] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.063] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.063] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.063] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.064] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.064] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.064] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.064] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.064] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.064] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.066] [INFO] [TensorRT] Searching for plugin: AttentionPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.066] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute attention_scale not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.066] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute enable_vision_block_attention not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.066] [INFO] [TensorRT] Successfully created plugin: AttentionPlugin
+[21:04:36.066] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.066] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.067] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.067] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.067] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.067] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.067] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.067] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.068] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.068] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.068] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.068] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.069] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.069] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.070] [INFO] [TensorRT] Searching for plugin: AttentionPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.070] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute attention_scale not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.070] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute enable_vision_block_attention not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.070] [INFO] [TensorRT] Successfully created plugin: AttentionPlugin
+[21:04:36.070] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.070] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.071] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.071] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.071] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.071] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.072] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.072] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.072] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.072] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.073] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.073] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.073] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.073] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.074] [INFO] [TensorRT] Searching for plugin: AttentionPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.074] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute attention_scale not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.074] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute enable_vision_block_attention not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.074] [INFO] [TensorRT] Successfully created plugin: AttentionPlugin
+[21:04:36.074] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.075] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.075] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.075] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.075] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.076] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.076] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.076] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.077] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.077] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.077] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.077] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.077] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.077] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.079] [INFO] [TensorRT] Searching for plugin: AttentionPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.079] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute attention_scale not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.079] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute enable_vision_block_attention not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.079] [INFO] [TensorRT] Successfully created plugin: AttentionPlugin
+[21:04:36.079] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.079] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.080] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.080] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.080] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.080] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.080] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.080] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.081] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.081] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.081] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.081] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.081] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.081] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.082] [INFO] [TensorRT] Searching for plugin: AttentionPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.082] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute attention_scale not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.082] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute enable_vision_block_attention not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.082] [INFO] [TensorRT] Successfully created plugin: AttentionPlugin
+[21:04:36.083] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.083] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.083] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.083] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.084] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.084] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.084] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.084] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.085] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.085] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.085] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.085] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.085] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.085] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.086] [INFO] [TensorRT] Searching for plugin: AttentionPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.086] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute attention_scale not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.086] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute enable_vision_block_attention not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.086] [INFO] [TensorRT] Successfully created plugin: AttentionPlugin
+[21:04:36.086] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.086] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.087] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.087] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.087] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.087] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.088] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.088] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.088] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.088] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.089] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.089] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.089] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.089] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.090] [INFO] [TensorRT] Searching for plugin: AttentionPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.090] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute attention_scale not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.090] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute enable_vision_block_attention not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.090] [INFO] [TensorRT] Successfully created plugin: AttentionPlugin
+[21:04:36.090] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.090] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.091] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.091] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.091] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.091] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.091] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.091] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.092] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.092] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.092] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.092] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.092] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.093] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.094] [INFO] [TensorRT] Searching for plugin: AttentionPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.094] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute attention_scale not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.094] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute enable_vision_block_attention not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.094] [INFO] [TensorRT] Successfully created plugin: AttentionPlugin
+[21:04:36.094] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.094] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.094] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.095] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.095] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.095] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.095] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.095] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.096] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.096] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.096] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.096] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.096] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.096] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.097] [INFO] [TensorRT] Searching for plugin: AttentionPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.097] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute attention_scale not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.097] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute enable_vision_block_attention not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.097] [INFO] [TensorRT] Successfully created plugin: AttentionPlugin
+[21:04:36.097] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.097] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.098] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.098] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.098] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.098] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.099] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.099] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.099] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.099] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.099] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.099] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.100] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.100] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.101] [INFO] [TensorRT] Searching for plugin: AttentionPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.101] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute attention_scale not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.101] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute enable_vision_block_attention not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.101] [INFO] [TensorRT] Successfully created plugin: AttentionPlugin
+[21:04:36.101] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.101] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.102] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.102] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.102] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.102] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.102] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.102] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.103] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.103] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.103] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.103] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.103] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.103] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.104] [INFO] [TensorRT] Searching for plugin: AttentionPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.104] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute attention_scale not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.104] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute enable_vision_block_attention not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.104] [INFO] [TensorRT] Successfully created plugin: AttentionPlugin
+[21:04:36.104] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.104] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.105] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.105] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.105] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.105] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.106] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.106] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.106] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.106] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.106] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.107] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.107] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.107] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.108] [INFO] [TensorRT] Searching for plugin: AttentionPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.108] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute attention_scale not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.108] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute enable_vision_block_attention not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.108] [INFO] [TensorRT] Successfully created plugin: AttentionPlugin
+[21:04:36.108] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.108] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.109] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.109] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.109] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.109] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.109] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.109] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.110] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.110] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.110] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.110] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.110] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.110] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.111] [INFO] [TensorRT] Searching for plugin: AttentionPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.111] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute attention_scale not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.111] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute enable_vision_block_attention not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.111] [INFO] [TensorRT] Successfully created plugin: AttentionPlugin
+[21:04:36.111] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.112] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.112] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.112] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.112] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.112] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.113] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.113] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.113] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.113] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.113] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.113] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.114] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.114] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.115] [INFO] [TensorRT] Searching for plugin: AttentionPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.115] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute attention_scale not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.115] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute enable_vision_block_attention not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.115] [INFO] [TensorRT] Successfully created plugin: AttentionPlugin
+[21:04:36.115] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.115] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.116] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.116] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.116] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.116] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.116] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.116] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.117] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.117] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.117] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.117] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.117] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.117] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.118] [INFO] [TensorRT] Searching for plugin: AttentionPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.118] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute attention_scale not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.118] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute enable_vision_block_attention not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.118] [INFO] [TensorRT] Successfully created plugin: AttentionPlugin
+[21:04:36.119] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.119] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.119] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.120] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.120] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.120] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.120] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.120] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.121] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.121] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.121] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.121] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.121] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.121] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.123] [INFO] [TensorRT] Searching for plugin: AttentionPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.123] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute attention_scale not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.123] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute enable_vision_block_attention not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.123] [INFO] [TensorRT] Successfully created plugin: AttentionPlugin
+[21:04:36.123] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.123] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.123] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.123] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.124] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.124] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.124] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.124] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.125] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.125] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.125] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.125] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.125] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.125] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.126] [INFO] [TensorRT] Searching for plugin: AttentionPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.126] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute attention_scale not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.126] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute enable_vision_block_attention not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.126] [INFO] [TensorRT] Successfully created plugin: AttentionPlugin
+[21:04:36.126] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.126] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.127] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.127] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.127] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.127] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.127] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.127] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.128] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.128] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.128] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.128] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.128] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.128] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.129] [INFO] [TensorRT] Searching for plugin: AttentionPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.129] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute attention_scale not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.129] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute enable_vision_block_attention not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.129] [INFO] [TensorRT] Successfully created plugin: AttentionPlugin
+[21:04:36.130] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.130] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.130] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.130] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.130] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.131] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.131] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.131] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.131] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.131] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.131] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.132] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.132] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.132] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.133] [INFO] [TensorRT] Searching for plugin: AttentionPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.133] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute attention_scale not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.133] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute enable_vision_block_attention not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.133] [INFO] [TensorRT] Successfully created plugin: AttentionPlugin
+[21:04:36.133] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.133] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.134] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.134] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.134] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.134] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.134] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.134] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.135] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.135] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.135] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.135] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.135] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.135] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.136] [INFO] [TensorRT] Searching for plugin: AttentionPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.136] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute attention_scale not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.136] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute enable_vision_block_attention not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.136] [INFO] [TensorRT] Successfully created plugin: AttentionPlugin
+[21:04:36.137] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.137] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.137] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.137] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.138] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.138] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.138] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.138] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.138] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.138] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.139] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.139] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.139] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.139] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.140] [INFO] [TensorRT] Searching for plugin: AttentionPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.140] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute attention_scale not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.140] [WARNING] [TensorRT] onnxOpImporters.cpp:7639: Attribute enable_vision_block_attention not found in plugin node! Ensure that the plugin creator has a default value defined or the engine may fail to build.
+[21:04:36.140] [INFO] [TensorRT] Successfully created plugin: AttentionPlugin
+[21:04:36.140] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.140] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.141] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.141] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.141] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.141] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.141] [INFO] [TensorRT] Searching for plugin: Int4GroupwiseGemmPlugin, plugin_version: 1, plugin_namespace: 
+[21:04:36.141] [INFO] [TensorRT] Successfully created plugin: Int4GroupwiseGemmPlugin
+[21:04:36.757] [INFO] [TensorRT] [MemUsageChange] Init builder kernel library: CPU +199, GPU +192, now: CPU 445, GPU 1553 (MiB)
+[21:04:37.072] [INFO] [TensorRT] Local timing cache in use. Profiling results in this builder pass will not be stored.
+[21:04:37.145] [INFO] [TensorRT] Compiler backend is used during engine build.
+[21:05:17.467] [INFO] [TensorRT] [GraphReduction] The approximate region cut reduction algorithm is called.
+[21:05:17.482] [INFO] [TensorRT] Detected 33 inputs and 29 output network tensors.
+[21:05:23.809] [INFO] [TensorRT] Total Host Persistent Memory: 185552 bytes
+[21:05:23.809] [INFO] [TensorRT] Total Device Persistent Memory: 0 bytes
+[21:05:23.809] [INFO] [TensorRT] Max Scratch Memory: 4200448 bytes
+[21:05:23.810] [INFO] [TensorRT] [BlockAssignment] Started assigning block shifts. This will take 619 steps to complete.
+[21:05:23.833] [INFO] [TensorRT] [BlockAssignment] Algorithm ShiftNTopDown took 23.8116ms to assign 10 blocks to 619 nodes requiring 26215936 bytes.
+[21:05:23.834] [INFO] [TensorRT] Total Activation Memory: 26215936 bytes
+[21:05:32.610] [INFO] [TensorRT] [GraphReduction] The approximate region cut reduction algorithm is called.
+[21:05:32.628] [INFO] [TensorRT] Detected 33 inputs and 29 output network tensors.
+[21:05:35.704] [INFO] [TensorRT] Total Host Persistent Memory: 185552 bytes
+[21:05:35.704] [INFO] [TensorRT] Total Device Persistent Memory: 0 bytes
+[21:05:35.704] [INFO] [TensorRT] Max Scratch Memory: 4194816 bytes
+[21:05:35.705] [INFO] [TensorRT] [BlockAssignment] Started assigning block shifts. This will take 619 steps to complete.
+[21:05:35.729] [INFO] [TensorRT] [BlockAssignment] Algorithm ShiftNTopDown took 24.2066ms to assign 10 blocks to 619 nodes requiring 4235264 bytes.
+[21:05:35.729] [INFO] [TensorRT] Total Activation Memory: 4235264 bytes
+[21:05:36.055] [INFO] [TensorRT] Total Weights Memory: 1349902464 bytes
+[21:05:36.075] [INFO] [TensorRT] Compiler backend is used during engine execution.
+[21:05:36.076] [INFO] [TensorRT] Engine generation completed in 59.0047 seconds.
+[21:05:36.082] [INFO] [TensorRT] [MemUsageStats] Peak memory usage of TRT CPU/GPU memory allocators: CPU 0 MiB, GPU 1617 MiB
+[21:05:36.662] [INFO] [TensorRT] [MemUsageStats] Peak memory usage during Engine building and serialization: CPU: 6541 MiB
+[21:05:37.790] [INFO] [builderUtils.cpp:328:buildAndSerializeEngine] Engine saved to /home/orinnx/tensorrt-edgellm-workspace/Qwen3-1.7B-Instruct/engine/llm.engine
+[21:05:37.793] [INFO] [llmBuilder.cpp:1438:copyConfig] Copied config.json with builder config to /home/orinnx/tensorrt-edgellm-workspace/Qwen3-1.7B-Instruct/engine/config.json
+[21:05:37.857] [INFO] [fileUtils.cpp:48:copyFile] Successfully copied /home/orinnx/tensorrt-edgellm-workspace/Qwen3-1.7B-Instruct/onnx/llm/tokenizer_config.json to /home/orinnx/tensorrt-edgellm-workspace/Qwen3-1.7B-Instruct/engine/tokenizer_config.json
+[21:05:37.857] [INFO] [llmBuilder.cpp:1469:copyTokenizerFiles] Copied tokenizer file: tokenizer_config.json
+[21:05:38.410] [INFO] [fileUtils.cpp:48:copyFile] Successfully copied /home/orinnx/tensorrt-edgellm-workspace/Qwen3-1.7B-Instruct/onnx/llm/tokenizer.json to /home/orinnx/tensorrt-edgellm-workspace/Qwen3-1.7B-Instruct/engine/tokenizer.json
+[21:05:38.410] [INFO] [llmBuilder.cpp:1469:copyTokenizerFiles] Copied tokenizer file: tokenizer.json
+[21:05:38.413] [INFO] [fileUtils.cpp:48:copyFile] Successfully copied /home/orinnx/tensorrt-edgellm-workspace/Qwen3-1.7B-Instruct/onnx/llm/processed_chat_template.json to /home/orinnx/tensorrt-edgellm-workspace/Qwen3-1.7B-Instruct/engine/processed_chat_template.json
+[21:05:38.413] [INFO] [llmBuilder.cpp:1469:copyTokenizerFiles] Copied tokenizer file: processed_chat_template.json
+[21:05:39.499] [INFO] [fileUtils.cpp:48:copyFile] Successfully copied /home/orinnx/tensorrt-edgellm-workspace/Qwen3-1.7B-Instruct/onnx/llm/embedding.safetensors to /home/orinnx/tensorrt-edgellm-workspace/Qwen3-1.7B-Instruct/engine/embedding.safetensors
+[21:05:39.499] [INFO] [llmBuilder.cpp:1632:copyEmbeddingFile] Copied embedding.safetensors to /home/orinnx/tensorrt-edgellm-workspace/Qwen3-1.7B-Instruct/engine/embedding.safetensors
+[21:05:40.112] [INFO] [llm_build.cpp:247:main] LLM engine built successfully.
