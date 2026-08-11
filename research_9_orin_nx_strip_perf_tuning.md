@@ -223,6 +223,62 @@ engaged) and `tegrastats-stress-postfanfix.csv` (post-fix run, fan confirmed
 engaging) are both retained in `data/` for comparison rather than overwritten,
 since the delta between them is itself evidence of the failure mode.
 
+## 7. Addendum: The `max65` Curve Had a Hunting Bug, and the Fan's Real Ceiling Is Not What the Config Declares
+
+Two further issues surfaced from continued testing after §6's initial fix.
+
+**The `max65` profile as first written caused audible fan hunting.** It
+encoded a single-degree cliff — full PWM (255) at margin ≤ 40 (actual ≥ 65 °C),
+PWM 0 at margin ≥ 41 (actual ≤ 64 °C) — with nothing in between, unlike
+NVIDIA's stock profiles, which ramp gradually across wide margin bands
+specifically to avoid this. A live poll at idle with junction temperature
+essentially flat (66.4–67.2 °C, never crossing back below 65 °C) showed PWM
+cycling 0 → 64 → 255 → 242 → 0 rather than holding steady — the close-loop
+RPM governor was chasing a target that itself swung from fully off to fully
+on across a single degree of thermal noise, including noise induced by the
+fan's own cooling effect. The profile was rewritten with a graduated ramp
+spread across a ~30 °C band (255 at margin ≤ 30, stepping down through 217,
+140, 70, to 0 at margin ≥ 61) mirroring the stock profile's shape. After the
+rewrite, PWM held at a constant value (118) across the same 3 °C of thermal
+drift that previously caused full-scale cycling, and stepped smoothly (118 →
+171 → 214) as sustained load pushed temperature up through a 15 °C range —
+hunting eliminated.
+
+**The fan's declared 255 (100%) ceiling is not achievable.** With
+`nvfancontrol.service` stopped entirely (`systemctl is-active` confirmed
+`inactive`, no process running) and PWM written directly to the kernel sysfs
+interface (`/sys/class/hwmon/hwmon1/pwm1`), commanding 255 did not hold: it
+decayed unassisted to 187 after 1 second, then to 88 after 2 more, and
+stayed there. Nothing else was writing to the file. Low and mid values (0,
+128) held exactly as written. This means the fan's real sustained maximum is
+approximately **88/255 (≈34% duty)**, not the 100% the config's `RPM 6000`
+declares — a hardware- or firmware-level limit sitting below the
+`nvfancontrol` layer entirely, independent of any curve authored in the
+config file. This directly explains why the graduated `max65` profile's
+close-loop control plateaued around PWM 214–217 rather than reaching 255
+during the sustained combined-stress tests in §6 and below: it was correctly
+converging toward the fan's actual achievable ceiling, not failing to reach a
+software-declared one. This is a sharper, board-local instance of a finding
+already reported at the config level in the companion Nano fan-curve paper —
+that the declared ceiling is a config value rather than a hardware limit —
+now confirmed by bypassing the config layer entirely.
+
+**A dedicated attempt to reach the nominal 40W power mode's namesake wattage
+did not get there.** Combining `stress --cpu 8`, the `gpu_stress.cu` kernel,
+and a tight loop of TensorRT prefill benchmark calls (512-token input,
+tensor-core and memory-bandwidth heavy, unlike the plain FMA kernel) for a
+sustained 240-second run reached a peak of **32.8W** `VDD_IN` at 83 °C
+junction temperature — higher than either the LLM-benchmark-alone (26W) or
+compute-stress-alone (17.7W) figures from §4 and §6, but still short of the
+`40W` named power mode's nameplate figure, which is itself a cap under
+`MAXN_SUPER` rather than a target this board was observed to reach under any
+workload combination attempted here. Readers should treat 32.8W as the best
+lower-bound estimate of this board's peak draw from this study, not as a
+demonstrated ceiling — reaching or exceeding 40W would likely require a
+workload this study did not construct (e.g. multiple concurrent inference
+streams at higher batch size, which this study's single-batch engine build
+does not support).
+
 ## Evidence
 
 Raw logs for every step in this paper are in `data/`, prefixed `orinnx-20260810-`:
@@ -234,3 +290,4 @@ Raw logs for every step in this paper are in `data/`, prefixed `orinnx-20260810-
 - `decode500-bench.log`, `tegrastats-decode500.csv` — sustained 500-iteration decode run with concurrent power/thermal capture
 - `tegrastats-stress-precorrection.csv` — combined CPU+GPU stress before the `nvfancontrol` restart fix (fan not engaged, 74.5 °C peak)
 - `tegrastats-stress-postfanfix.csv` — same stress test after the fix (fan confirmed engaging, 71.75 °C peak)
+- `tegrastats-40w-attempt.csv` — combined CPU+GPU+tensor-core stress attempting to reach the 40W nameplate figure (peaked at 32.8W, 83 °C)
