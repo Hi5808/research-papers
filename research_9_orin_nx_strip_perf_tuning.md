@@ -20,7 +20,7 @@
 
 ## Abstract
 
-A prior study on an Orin Nano 8GB (same J401 carrier) established that stripping desktop packages, locking clocks via `jetson_clocks`, switching to `MAXN_SUPER` power mode, and applying an aggressive fan curve produced an 8.9x boot-time improvement with no measured throttling under sustained inference load. This paper reproduces that exact procedure — the same 135-package removal batch, the same systemd persistence pattern, the same `max65` fan-margin profile — on an Orin NX 16GB unit, to test whether the methodology transfers across modules in the same family rather than being an artifact of one board. It largely does, with one required correction: **`nvpmodel` mode indices are not portable across modules in the same family** — `MAXN_SUPER` is mode 2 on this Orin Nano SKU but mode 0 on this Orin NX SKU, and applying the Nano's mode number verbatim would have silently set the wrong power profile. Inference throughput on Qwen3-1.7B-Instruct came out 35% higher on prefill (memory-bandwidth- and compute-bound) and statistically unchanged on decode (2732.9 vs 2025 tok/s prefill; 63.5 vs 62.2 tok/s decode), consistent with the NX's higher clocks and larger core count but similar per-token memory-bandwidth ceiling. Sustained decode load pushed junction temperature past the Nano's 65 °C fan-trigger threshold (peak 69.6 °C at 26 W), the first live confirmation of the `max65` profile actually engaging under this study's methodology — the Nano paper's own soak never naturally reached its trigger point.
+A prior study on an Orin Nano 8GB (same J401 carrier) established that stripping desktop packages, locking clocks via `jetson_clocks`, switching to `MAXN_SUPER` power mode, and applying an aggressive fan curve produced an 8.9x boot-time improvement with no measured throttling under sustained inference load. This paper reproduces that exact procedure — the same 135-package removal batch, the same systemd persistence pattern, the same `max65` fan-margin profile — on an Orin NX 16GB unit, to test whether the methodology transfers across modules in the same family rather than being an artifact of one board. It largely does, with one required correction: **`nvpmodel` mode indices are not portable across modules in the same family** — `MAXN_SUPER` is mode 2 on this Orin Nano SKU but mode 0 on this Orin NX SKU, and applying the Nano's mode number verbatim would have silently set the wrong power profile. Inference throughput on Qwen3-1.7B-Instruct came out 35% higher on prefill (memory-bandwidth- and compute-bound) and statistically unchanged on decode (2732.9 vs 2025 tok/s prefill; 63.5 vs 62.2 tok/s decode), consistent with the NX's higher clocks and larger core count but similar per-token memory-bandwidth ceiling. Sustained decode load pushed junction temperature past the Nano's 65 °C fan-trigger threshold (peak 69.6 °C at 26 W) — **but §6 found this ran on a stale fan profile**, because `nvfancontrol.service` does not hot-reload its config and had not been restarted since the `max65` profile was written. A follow-up combined CPU+GPU stress test caught this, and after restarting the service the curve was confirmed live and working (PWM 0→255 at the 65 °C crossing). That same follow-up also found the module's true power ceiling is higher than a naive compute-only stress test suggests: it peaked at only 17.7W against the LLM benchmark's 26W, reproducing a finding from the companion Nano fan-curve paper that SM occupancy alone does not reach the module's real power envelope — tensor-core and DRAM-bandwidth-heavy workloads do. See §6 for the full correction.
 
 ## 1. Method: What Was Reproduced Verbatim vs. What Required Re-Derivation
 
@@ -133,7 +133,7 @@ is the capital of the United States?") produced a correct, well-formed answer
 | Prefill (128-token context, tok/s) | 2025 | 2732.9 | +35% |
 | Decode (CUDA-graph, steady state, tok/s) | 62.2 | 63.5 (10-iter) / 63.6 (500-iter) | ~flat |
 | Peak power during sustained decode | not measured in Nano paper | 26007 mW (VDD_IN) | — |
-| Peak junction temp during sustained decode | ~59 °C (never triggered 65 °C fan) | 69.6 °C (fan triggered) | — |
+| Peak junction temp during sustained decode | ~59 °C (never triggered 65 °C fan) | 69.6 °C (see §6 correction: fan curve was stale at time of this run) | — |
 
 The prefill gain is consistent with the NX's larger core count and higher
 clocks (1984 MHz vs 1728 MHz CPU, 1173 MHz vs 1020 MHz GPU) — prefill is
@@ -144,14 +144,15 @@ memory-bandwidth comparison (module RAM sizes differ: 16GB LPDDR5 vs the
 Nano's 8GB), and the decode figures should not be read as a bandwidth
 measurement, only as a throughput one.
 
-Notably, this study's sustained 500-iteration decode run is the first time
-across this project's papers that the `max65` fan curve was observed
-triggering live — the Nano study's own soak test held at ~59 °C and never
-naturally reached its 65 °C threshold. On this NX unit under the same decode
-workload, junction temperature peaked at 69.6 °C, crossing the trigger and
-confirming the curve activates as designed under sufficient sustained load
-(visible in `evidence/benchmark/tegrastats_decode500.log` as a power/thermal
-drop partway through the capture, coincident with the fan engaging).
+This study's sustained 500-iteration decode run pushed junction temperature to
+69.6 °C, above the Nano study's 65 °C fan-trigger point (whose own soak test
+held at ~59 °C and never naturally reached that threshold) — but **this run
+did not actually exercise the `max65` profile**. As found in §6, the
+`nvfancontrol` service was still running on the stock `quiet` profile at this
+point in the study; the custom profile had been written to disk but the
+service had not yet been restarted to pick it up. The live confirmation that
+`max65` engages as designed came later, from the dedicated follow-up stress
+test in §6, not from this benchmark run.
 
 ## 5. Conclusion
 
@@ -168,6 +169,60 @@ bound phase does not), which is itself a useful sanity check that the tuning
 was applied correctly on both boards — a tuning bug that left clocks at
 default would likely have shown up as a larger, not smaller, prefill gap.
 
+## 6. Correction: `nvfancontrol` Does Not Hot-Reload, and a Naive Compute Stress Test Undershoots the Module's Real Power Ceiling
+
+Two issues surfaced after this paper's initial publication, from a follow-up
+combined CPU+GPU stress test run to establish the board's actual peak power
+draw (the LLM benchmark's 26W had been assumed to be near the ceiling, but
+was never verified against a dedicated stress workload).
+
+**The fan curve appeared not to be working.** A first combined-stress run
+(`stress --cpu 8` for 90s + the same `gpu_stress.cu` FMA-loop kernel used in
+the companion Nano fan-curve paper, both concurrent, `tegrastats` at 500ms)
+pushed junction temperature to a peak of **74.5 °C** — well past the `max65`
+profile's 65 °C trigger — with no sign of the fan curve having engaged.
+
+Root cause: `nvfancontrol.service` reads its config **once, at service
+start**, and does not hot-reload on file changes. In §3's procedure, the
+service had already started at boot (20:29:57) using the stock `quiet`
+profile; the `max65` profile was written into the config file afterward
+(20:34:23) but the running service never picked it up. `systemctl restart
+nvfancontrol.service` is a required step after installing a custom profile —
+editing the file alone is not sufficient, and nothing in the service's status
+output distinguishes "config edited, not yet applied" from "config applied."
+This is a mechanical gap in this paper's own procedure, not a property of the
+`max65` profile itself.
+
+After restarting the service, live `pwm1` sysfs polling under the same
+combined stress workload confirmed the profile drives the fan exactly as
+designed: PWM jumped from 0 to **255 (full)** the moment junction temperature
+crossed into the trigger band (~73.6 °C, margin ≤ 40 relative to
+`GROUP_MAX_TEMP 105`), then settled to **217 (≈85%)**, holding sustained
+temperature flat around 73 °C rather than continuing to climb — direct,
+live confirmation of the margin-based curve engaging correctly
+(`data/orinnx-20260810-tegrastats-stress-postfanfix.csv`).
+
+**The naive compute stress test undershoots the module's real power ceiling.**
+Even with the fan curve confirmed working, the combined `stress`+`gpu_stress.cu`
+workload peaked at only **17.7W** `VDD_IN` — lower than the LLM decode
+benchmark's 26W from §4, despite pinning all 8 CPU cores and the GPU at
+effectively 100% occupancy for 90 seconds. This reproduces, on this module, a
+finding already reported in the companion fan-curve paper on the Nano: *"the
+module's power envelope is reachable only by a load that exercises tensor
+cores and DRAM, not by SM occupancy alone."* `gpu_stress.cu`'s kernel does
+simple FMA arithmetic entirely in registers — no tensor-core instructions, no
+meaningful DRAM traffic — so despite 99% reported GPU occupancy it does not
+exercise the power-hungry paths that real inference workloads do. The LLM
+benchmark's 26W, not the stress test's 17.7W, is the better available estimate
+of this board's actual peak draw under this study; a true power ceiling would
+require a workload that combines CPU saturation with tensor-core-heavy GPU
+work (e.g. concurrent LLM decode + `stress`), which was not attempted here.
+
+Corrected data: `tegrastats-stress-precorrection.csv` (pre-fix run, fan not
+engaged) and `tegrastats-stress-postfanfix.csv` (post-fix run, fan confirmed
+engaging) are both retained in `data/` for comparison rather than overwritten,
+since the delta between them is itself evidence of the failure mode.
+
 ## Evidence
 
 Raw logs for every step in this paper are in `data/`, prefixed `orinnx-20260810-`:
@@ -177,3 +232,5 @@ Raw logs for every step in this paper are in `data/`, prefixed `orinnx-20260810-
 - `qwen3-1.7b-output.json` — inference correctness check output
 - `prefill-decode10-bench.log` — 10-iteration prefill/decode benchmark
 - `decode500-bench.log`, `tegrastats-decode500.csv` — sustained 500-iteration decode run with concurrent power/thermal capture
+- `tegrastats-stress-precorrection.csv` — combined CPU+GPU stress before the `nvfancontrol` restart fix (fan not engaged, 74.5 °C peak)
+- `tegrastats-stress-postfanfix.csv` — same stress test after the fix (fan confirmed engaging, 71.75 °C peak)

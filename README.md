@@ -165,7 +165,8 @@ Reproduces the prior Orin Nano package-strip and clock/power/fan tuning study on
 - The 135-package removal batch, the ported `max65` fan-curve profile, and both systemd drop-in fixes (`nvidia-cdi-refresh.service`, `nvpmodel.service`) all reproduced without modification
 - `nvpmodel` mode indices are **not portable across modules in the same family**: `MAXN_SUPER` is mode 2 on the Orin Nano SKU but mode 0 on this Orin NX SKU — applying the Nano's mode number verbatim would have silently selected the wrong power profile
 - Qwen3-1.7B-Instruct prefill throughput came out 35% higher (2732.9 vs 2025 tok/s), consistent with the NX's higher clocks and larger core count; decode stayed flat (63.5 vs 62.2 tok/s), consistent with a memory-bandwidth-bound phase
-- Sustained 500-iteration decode load pushed junction temperature to 69.6 °C at 26 W, the first live confirmation across this project's papers that the `max65` fan curve actually engages under load — the Nano study's own soak never naturally reached its 65 °C trigger
+- **Correction caught by a follow-up stress test:** the sustained decode run's 69.6 °C peak did not actually exercise the `max65` fan curve — `nvfancontrol.service` doesn't hot-reload, and had not been restarted since the profile was written. After restarting it, live PWM polling confirmed the curve engages exactly as designed (0→255 at the 65 °C crossing)
+- That same follow-up found a naive CPU+GPU compute stress test undershoots the module's real power ceiling (17.7W vs the LLM benchmark's 26W) — SM occupancy alone doesn't reach the module's power envelope, reproducing a finding from the companion Nano fan-curve paper
 
 **Platform:** reComputer J401 (Jetson Orin NX 16GB) | **Date:** August 2026
 
