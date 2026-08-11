@@ -277,6 +277,8 @@ did not get there, across five independent workload combinations.**
 | CPU stress + 4B prefill loop + 4B decode loop | 32.6 W | 82.9 °C |
 | 4B GPU load first, then CPU cores staged one at a time (20s hold) | 34.2 W | 80.7 °C |
 | 4B GPU load first, then CPU cores staged one at a time (90s hold) | 34.3 W | 87.3 °C |
+| CPU load first (all 8 cores), then 2 concurrent prefill + 2 decode streams slammed on | crashed (SIGABRT), not comparable | — |
+| CPU load first (all 8 cores), then single prefill + decode stream slammed on | 32.5 W | 74.3 °C |
 
 Every combination attempted — from a pure compute kernel to a 4B-parameter
 model under combined CPU and tensor-core load — converged on the same
@@ -320,10 +322,28 @@ hold, noticeably hotter than any prior test in this study and approaching
 territory where thermal throttling becomes a plausible explanation in its
 own right for why power did not climb further — consistent with the forum
 thread's own claim that pushing harder triggers throttling rather than
-higher sustained draw. The staged-loading technique works as described and
-is the best result obtained in this study (six workload combinations
-tested total, spanning 17.7-34.3 W), but did not close the remaining gap to
-the nameplate figure.
+higher sustained draw.
+
+**Reversing the order made it worse, not better.** Two further tests loaded
+CPU first (all 8 `stress` cores at once, stabilized for 10s) and then added
+GPU load on top, testing whether ordering itself — not just gradualness —
+mattered. A first attempt slamming two concurrent prefill and two concurrent
+decode streams onto the pre-loaded CPU crashed four of the four `llm_bench`
+processes outright (`SIGABRT`) — running multiple concurrent contexts
+against the same engine file is not reliably stable, a caveat for anyone
+attempting a similar multi-stream test. A corrected retry with a single
+prefill and single decode stream avoided the crash but only reached
+**32.5 W** — lower than the GPU-first staged approach's 34.2-34.3 W, and
+close to the ~33 W ceiling from the naive simultaneous-load tests earlier in
+this section. Abrupt loading underperforms gradual staging regardless of
+which resource (CPU or GPU) is added second; the direction of the ordering
+matters less than whether the added load is introduced gradually or all at
+once.
+
+The staged GPU-first, CPU-cores-added-one-at-a-time technique is the best
+result obtained across eight workload/ordering combinations tested in this
+study (17.7-34.3 W total range), but did not close the remaining gap to the
+nameplate figure.
 
 Readers should treat 34.3 W as this board's practical power ceiling under
 the workloads and staging technique available to this study, not 40 W — the
@@ -348,3 +368,4 @@ Raw logs for every step in this paper are in `data/`, prefixed `orinnx-20260810-
 - `tegrastats-40w-4b.csv` — CPU stress + 4B prefill loop + 4B decode loop (32.6W)
 - `tegrastats-40w-staged.csv` — GPU load first, then CPU cores staged one at a time, 20s hold (34.2W)
 - `tegrastats-40w-staged-extended.csv` — same staging technique, 90s hold (34.3W, 87.3°C)
+- `tegrastats-40w-reverse-order.csv` — CPU loaded first, single GPU stream slammed on top afterward (32.5W, worse than staged)
