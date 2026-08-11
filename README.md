@@ -175,9 +175,84 @@ Reproduces the prior Orin Nano package-strip and clock/power/fan tuning study on
 
 ---
 
+### 10. Four Benchmark Campaigns on Jetson Orin NX 16GB: What Nobody Had Published Yet
+
+An overview tying together four targeted benchmark campaigns on the same Orin NX unit, chosen specifically to fill gaps a literature check confirmed were open rather than re-measuring numbers that already exist elsewhere.
+
+**Key findings:**
+- Three campaigns produced substantive new findings (tokens-per-joule, OC-throttle/latency correlation, TensorRT vs. llama.cpp); the fourth (DLA) produced a clean, worth-knowing negative result
+- Two reliability traps recur across all four: `nvpmodel -m` into 10W/15W silently fails without an interactive reboot confirmation over SSH, and this board intermittently loses its GPU `devfreq` governor node across reboots
+- A background build does not survive a `nvpmodel`-triggered reboot even with `nohup`/`disown` — sequence reboot-requiring work before long unattended builds, not concurrently
+
+**Platform:** reComputer J4012 (Jetson Orin NX 16GB, J401 carrier) | **Date:** August 2026
+
+[Read full paper →](research_10_orin_nx_benchmark_campaign_overview.md)
+
+---
+
+### 11. Tokens-per-Joule Across All Five nvpmodel Power Modes on Jetson Orin NX 16GB
+
+Measures decode throughput and energy-per-token for Qwen3-1.7B/4B across 10W, 15W, 25W, 40W, and MAXN_SUPER, finding the opposite efficiency curve from the published Orin Nano result.
+
+**Key findings:**
+- Efficiency *degrades* from 10W through 25W and only improves at 40W — the actual Pareto-optimal mode on this hardware — not a mid-tier mode like the Nano's published 25W
+- Mechanism: the per-mode GPU clock/TPC table is non-monotonic (25W runs 4 TPCs at a lower clock than 10W/15W's 2 TPCs; full GPU throughput only unlocks at 40W)
+- Two of five `nvpmodel -m` mode-switch attempts silently failed and left the board at its prior mode with no error, requiring a reboot-and-reverify procedure to get clean data
+
+**Platform:** reComputer J4012 (Jetson Orin NX 16GB, J401 carrier) | **Date:** August 2026
+
+[Read full paper →](research_11_orin_nx_tokens_per_joule.md)
+
+---
+
+### 12. Does Hardware Over-Current Throttling Affect LLM Inference Latency on Jetson Orin NX?
+
+Correlates this board's `soctherm_oc` over-current protection (previously found to cause its ~34W power ceiling) with actual LLM inference behavior, rather than only synthetic stress workloads.
+
+**Key findings:**
+- Decode inference never triggers the protection, with or without concurrent CPU load — decode-dominated serving workloads can disregard it entirely
+- Prefill under concurrent CPU load does trigger it (13,726 events in ~27s) and costs a real 10.1% throughput drop
+- Counter-intuitively, per-iteration timing variance *decreased* under throttling (9.50ms→4.53ms stddev) — a sustained latency floor, not added jitter
+
+**Platform:** reComputer J4012 (Jetson Orin NX 16GB, J401 carrier) | **Date:** August 2026
+
+[Read full paper →](research_12_orin_nx_oc_throttle_latency.md)
+
+---
+
+### 13. TensorRT-Edge-LLM vs. llama.cpp on the Same Jetson Orin NX 16GB
+
+Builds both inference stacks from source on the same board and benchmarks the same Qwen3 models at matched settings — a comparison rarely done with both variables controlled simultaneously.
+
+**Key findings:**
+- TensorRT-Edge-LLM wins decisively: 57-65% faster prefill, 28-50% faster decode, depending on model size
+- Power draw is nearly identical between stacks (within 1W), so the efficiency gap tracks the throughput gap almost exactly — not a speed-for-power tradeoff
+- A real, disclosed confound: llama.cpp can't ingest NVIDIA's NVFP4-family quantized checkpoints directly, so the two stacks compare different quantization schemes, not just different engines
+
+**Platform:** reComputer J4012 (Jetson Orin NX 16GB, J401 carrier) | **Date:** August 2026
+
+[Read full paper →](research_13_orin_nx_trtllm_vs_llamacpp.md)
+
+---
+
+### 14. DLA Hardware Initializes but Is Unusable Through TensorRT on This Jetson Orin NX Software Stack
+
+Attempted to build a DLA-targeted TensorRT engine for a concurrent DLA+GPU utilization study; documents why that study could not be run.
+
+**Key findings:**
+- DLA cores initialize cleanly at the kernel level (both online, clocked, no driver errors) but TensorRT reports zero available DLA cores on this JetPack 7.2 / TensorRT 10.16.2.10 build
+- No DLA compiler package exists anywhere in this JetPack release's apt repository to fix it — the required component appears entirely absent, not merely misconfigured
+- Reported as a negative result: most Jetson benchmarking content assumes DLA "just works" once the cores are present; here it demonstrably doesn't
+
+**Platform:** reComputer J4012 (Jetson Orin NX 16GB, J401 carrier) | **Date:** August 2026
+
+[Read full paper →](research_14_orin_nx_dla_unavailable.md)
+
+---
+
 ## About
 
-Papers 1-3 document research from production deployments on a Seeed Studio reComputer J3011 (Jetson Orin Nano 8GB on a J401 carrier), emphasizing practical systems-level challenges in edge AI deployment. Papers 4-5 document findings from building and evaluating a multi-model small-LLM fine-tuning pipeline, emphasizing failure modes that produce valid-looking but degraded artifacts, and the evaluation rigor required to trust A/B comparisons between fine-tuned models. Paper 6 documents hardware-level board bring-up, covering device-discovery methodology and firmware-flashing tool regressions under real-world host constraints. Paper 7 returns to the Jetson platform at the thermal and power-management layer, documenting a configuration-encoding trap and the measurement discipline required for trustworthy thermal benchmarks. Paper 8 extends that measurement discipline to storage, characterizing an unbranded NVMe SSD non-destructively on a live system and treating the instrument itself as something requiring validation. Paper 9 returns to the strip-and-tune methodology of the early Nano papers, testing it on an Orin NX 16GB to separate what generalizes across a module family from what is board-specific and must be re-derived.
+Papers 1-3 document research from production deployments on a Seeed Studio reComputer J3011 (Jetson Orin Nano 8GB on a J401 carrier), emphasizing practical systems-level challenges in edge AI deployment. Papers 4-5 document findings from building and evaluating a multi-model small-LLM fine-tuning pipeline, emphasizing failure modes that produce valid-looking but degraded artifacts, and the evaluation rigor required to trust A/B comparisons between fine-tuned models. Paper 6 documents hardware-level board bring-up, covering device-discovery methodology and firmware-flashing tool regressions under real-world host constraints. Paper 7 returns to the Jetson platform at the thermal and power-management layer, documenting a configuration-encoding trap and the measurement discipline required for trustworthy thermal benchmarks. Paper 8 extends that measurement discipline to storage, characterizing an unbranded NVMe SSD non-destructively on a live system and treating the instrument itself as something requiring validation. Paper 9 returns to the strip-and-tune methodology of the early Nano papers, testing it on an Orin NX 16GB to separate what generalizes across a module family from what is board-specific and must be re-derived. Papers 10-14 are a follow-on benchmark campaign on that same Orin NX unit, deliberately targeting gaps a literature check confirmed were open — power-mode efficiency, hardware throttling under real inference workloads, a matched-model inference-stack comparison, and DLA availability — with paper 10 as the overview and 11-14 as the individual campaigns, including one reported negative result.
 
 ## Citation
 
