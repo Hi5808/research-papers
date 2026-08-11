@@ -1,0 +1,2 @@
+mode,batch_size,osl,e2e_time_ms,per_token_ms,throughput_tps,input_len
+prefill,1,1,483.3600,0.9441,1059.2520,512

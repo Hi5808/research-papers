@@ -1,0 +1,2 @@
+mode,batch_size,osl,e2e_time_ms,per_token_ms,throughput_tps,past_kv_len
+decode,1,1,32.7155,32.7155,30.5665,128
