@@ -275,6 +275,8 @@ did not get there, across five independent workload combinations.**
 | CPU stress + 3 concurrent 1.7B prefill loops + burn kernel | 29.4 W | — |
 | CPU stress + 1.7B prefill loop + 1.7B decode loop | 33.0 W | 84.5 °C |
 | CPU stress + 4B prefill loop + 4B decode loop | 32.6 W | 82.9 °C |
+| 4B GPU load first, then CPU cores staged one at a time (20s hold) | 34.2 W | 80.7 °C |
+| 4B GPU load first, then CPU cores staged one at a time (90s hold) | 34.3 W | 87.3 °C |
 
 Every combination attempted — from a pure compute kernel to a 4B-parameter
 model under combined CPU and tensor-core load — converged on the same
@@ -304,10 +306,30 @@ power-delivery documentation for the J401 carrier specifically.
 [Source: NVIDIA Developer Forums, "Orin NX 16GB on DevKit Super Mode power
 loading can't up to 40W"](https://forums.developer.nvidia.com/t/orin-nx-16gb-on-devkit-super-mode-power-loading-cant-up-to-40w/324604)
 
-Readers should treat 32–33 W as this board's practical power ceiling under
-ordinary inference and CPU workloads, not 40 W — the mode name describes an
-allowed cap under `MAXN_SUPER`, not a demonstrated or reliably reachable
-draw.
+**A follow-up test applied the forum thread's own recommendation directly:
+start GPU load first, then add CPU cores one at a time rather than all at
+once.** GPU inference load (concurrent 4B prefill and decode loops) was
+started and allowed to stabilize (12s) before CPU cores were added
+individually via separate single-core `stress` processes, staggered 6-8s
+apart, holding all 8 cores + GPU load together afterward. This produced a
+real, repeatable improvement — **34.2 W** in a first run (20s hold at full
+load) and **34.3 W** in a second, longer run (90s hold) — a genuine gain
+over the ~33 W ceiling from simultaneous-load tests, but still 5.7-5.8 W
+short of 40 W. Junction temperature reached **87.25 °C** during the extended
+hold, noticeably hotter than any prior test in this study and approaching
+territory where thermal throttling becomes a plausible explanation in its
+own right for why power did not climb further — consistent with the forum
+thread's own claim that pushing harder triggers throttling rather than
+higher sustained draw. The staged-loading technique works as described and
+is the best result obtained in this study (six workload combinations
+tested total, spanning 17.7-34.3 W), but did not close the remaining gap to
+the nameplate figure.
+
+Readers should treat 34.3 W as this board's practical power ceiling under
+the workloads and staging technique available to this study, not 40 W — the
+mode name describes an allowed cap under `MAXN_SUPER`, not a draw this study
+was able to demonstrate or reliably reach, even applying NVIDIA's own
+documented guidance for approaching it.
 
 ## Evidence
 
@@ -324,3 +346,5 @@ Raw logs for every step in this paper are in `data/`, prefixed `orinnx-20260810-
 - `tegrastats-40w-multistream.csv` — CPU stress + 3 concurrent 1.7B prefill loops + burn kernel (29.4W, worse than single-stream)
 - `tegrastats-40w-prefilldecode.csv` — CPU stress + 1.7B prefill loop + 1.7B decode loop (33.0W)
 - `tegrastats-40w-4b.csv` — CPU stress + 4B prefill loop + 4B decode loop (32.6W)
+- `tegrastats-40w-staged.csv` — GPU load first, then CPU cores staged one at a time, 20s hold (34.2W)
+- `tegrastats-40w-staged-extended.csv` — same staging technique, 90s hold (34.3W, 87.3°C)
