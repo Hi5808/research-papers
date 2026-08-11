@@ -1,0 +1,4 @@
+DLA0_CORE:   Online=1 MinFreq=0 MaxFreq=1228800000 CurrentFreq=1228800000
+DLA0_FALCON: Online=1 MinFreq=0 MaxFreq=652800000 CurrentFreq=652800000
+DLA1_CORE:   Online=1 MinFreq=0 MaxFreq=1228800000 CurrentFreq=1228800000
+DLA1_FALCON: Online=1 MinFreq=0 MaxFreq=652800000 CurrentFreq=652800000

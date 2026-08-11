@@ -1,0 +1,4 @@
+[   10.446478] nvdla 15880000.nvdla0: Adding to iommu group 38
+[   10.457795] nvdla 15880000.nvdla0: syncpt_unit_base 60000000 syncpt_unit_size 4000000 size 10000
+[   10.461942] nvdla 158c0000.nvdla1: Adding to iommu group 41
+[   10.481163] nvdla 158c0000.nvdla1: syncpt_unit_base 60000000 syncpt_unit_size 4000000 size 10000

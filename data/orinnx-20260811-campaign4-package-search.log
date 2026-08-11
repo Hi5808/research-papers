@@ -1,0 +1,7 @@
+ii  libcudla-13-2                              13.2.75-1                                        arm64        CUDLA native runtime libraries
+ii  libcudla-dev-13-2                          13.2.75-1                                        arm64        CUDLA native dev links, headers
+---
+libnvidia-gpucomp - NVIDIA binary GPU compiler library
+gcc-13-offload-nvptx - GCC offloading compiler to NVPTX
+gcc-14-offload-nvptx - GCC offloading compiler to NVPTX
+libnvjitlink12 - NVIDIA Compiler JIT LTO Library

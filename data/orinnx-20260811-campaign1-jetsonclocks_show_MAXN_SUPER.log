@@ -1,0 +1,22 @@
+SOC family:tegra234  Machine:NVIDIA Jetson Orin NX Engineering Reference Developer Kit Super
+Online CPUs: 0-7, Offline CPUs: 
+cpu0:  Governor=schedutil MinFreq=1984000 MaxFreq=1984000 CurrentFreq=1984000 IdleStates: WFI=0 c7=0 
+cpu1:  Governor=schedutil MinFreq=1984000 MaxFreq=1984000 CurrentFreq=1984000 IdleStates: WFI=0 c7=0 
+cpu2:  Governor=schedutil MinFreq=1984000 MaxFreq=1984000 CurrentFreq=1984000 IdleStates: WFI=0 c7=0 
+cpu3:  Governor=schedutil MinFreq=1984000 MaxFreq=1984000 CurrentFreq=1984000 IdleStates: WFI=0 c7=0 
+cpu4:  Governor=schedutil MinFreq=1984000 MaxFreq=1984000 CurrentFreq=1984000 IdleStates: WFI=0 c7=0 
+cpu5:  Governor=schedutil MinFreq=1984000 MaxFreq=1984000 CurrentFreq=1984000 IdleStates: WFI=0 c7=0 
+cpu6:  Governor=schedutil MinFreq=1984000 MaxFreq=1984000 CurrentFreq=1984000 IdleStates: WFI=0 c7=0 
+cpu7:  Governor=schedutil MinFreq=1984000 MaxFreq=1984000 CurrentFreq=1984000 IdleStates: WFI=0 c7=0 
+GPU MinFreq=1173000000 MaxFreq=1173000000 CurrentFreq=1173000000
+Active GPU TPCs: 4
+EMC MinFreq=3199000000 MaxFreq=3199000000 CurrentFreq=3199000000
+DLA0_CORE:   Online=1 MinFreq=0 MaxFreq=1228800000 CurrentFreq=1228800000
+DLA0_FALCON: Online=1 MinFreq=0 MaxFreq=652800000 CurrentFreq=652800000
+DLA1_CORE:   Online=1 MinFreq=0 MaxFreq=1228800000 CurrentFreq=1228800000
+DLA1_FALCON: Online=1 MinFreq=0 MaxFreq=652800000 CurrentFreq=652800000
+PVA0_VPS0: Online=1 MinFreq=0 MaxFreq=1190400000 CurrentFreq=1190400000
+PVA0_AXI:  Online=1 MinFreq=0 MaxFreq=857600000 CurrentFreq=857600000
+FAN Dynamic Speed Control=nvfancontrol hwmon1_pwm1=170
+FAN Dynamic Speed Control=nvfancontrol hwmon1_pwm1_enable=1
+NV Power Mode: MAXN_SUPER

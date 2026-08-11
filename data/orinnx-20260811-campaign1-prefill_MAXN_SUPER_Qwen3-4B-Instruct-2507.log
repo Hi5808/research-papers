@@ -1,0 +1,39 @@
+[00:48:19.384] [INFO] [llm_bench.cpp:570:main] === LLM Profile Benchmark ===
+[00:48:19.384] [INFO] [llm_bench.cpp:571:main] Mode: prefill
+[00:48:19.384] [INFO] [trtUtils.h:66:loadEdgellmPluginLib] EDGELLM_PLUGIN_PATH: /home/orinnx/TensorRT-Edge-LLM/build/libNvInfer_edgellm_plugin.so
+[00:48:19.451] [INFO] [llm_bench.cpp:585:main] Layer profiling disabled from startup. E2E timing only.
+[00:48:19.451] [INFO] [llmEngineConfig.cpp:462:parseEngineConfig] reading /home/orinnx/tensorrt-edgellm-workspace/Qwen3-4B-Instruct-2507/engine/config.json
+[00:48:19.451] [WARNING] [version.cpp:103:checkVersion] Model version 0.8.0 does not match runtime version 0.9.1. Consider re-exporting or re-building.
+[00:48:19.451] [INFO] [llmRuntimeUtils.cpp:272:collectRopeConfig] Collected rope config: RopeConfig:  type: Default  rotaryScale: 1  rotaryTheta: 5e+06  partialRotaryFactor: 1  maxPositionEmbeddings: 262144
+[00:48:19.451] [INFO] [llmEngineConfig.cpp:626:parseEngineConfig] LLMEngineConfig{ hiddenSize=2560 vocabSize=151936 outputVocabSize=151936 numDecoderLayers=36 numAttentionLayers=36 numKVHeads=8 headDim=128 rotaryDim=128 maxBatch=1 maxInputLen=512 maxKVCapacity=1024 pleEnabled=false numPleInputs=0 pleHiddenSize=0 isSpecDecodeBase=false specDecodeType=0 loraRank=0 }
+[00:48:19.451] [INFO] [engineExecutor.cpp:77:EngineExecutor] loading engine file: /home/orinnx/tensorrt-edgellm-workspace/Qwen3-4B-Instruct-2507/engine/llm.engine
+[00:48:20.255] [INFO] [TensorRT] [MS] Running engine with multi stream info
+[00:48:20.255] [INFO] [TensorRT] [MS] Number of aux streams is 1
+[00:48:20.255] [INFO] [TensorRT] [MS] Number of total worker streams is 2
+[00:48:20.255] [INFO] [TensorRT] [MS] The main stream provided by execute/enqueue calls is the first worker stream
+[00:48:21.368] [INFO] [TensorRT] [MemUsageChange] TensorRT-managed allocation in IExecutionContext creation: CPU +0, GPU +0, now: CPU 0, GPU 2529 (MiB)
+[00:48:21.368] [INFO] [trtUtils.cpp:369:setNonBlockingAuxStreams] configured 1 non-blocking auxiliary stream(s) for execution context
+[00:48:21.368] [INFO] [engineExecutor.cpp:101:EngineExecutor] engine loaded successfully (78 I/O tensors)
+[00:48:21.368] [INFO] [llm_bench.cpp:764:main] EngineExecutor loaded from /home/orinnx/tensorrt-edgellm-workspace/Qwen3-4B-Instruct-2507/engine/llm.engine
+[00:48:21.397] [INFO] [ropeCache.cpp:109:getOrCreate] RopeCache: creating new entry (rotaryDim=128, maxSeqLen=1024)
+[00:48:21.455] [INFO] [llm_bench.cpp:818:main] Engine config:
+LLMEngineConfig{ hiddenSize=2560 vocabSize=151936 outputVocabSize=151936 numDecoderLayers=36 numAttentionLayers=36 numKVHeads=8 headDim=128 rotaryDim=128 maxBatch=1 maxInputLen=512 maxKVCapacity=1024 pleEnabled=false numPleInputs=0 pleHiddenSize=0 isSpecDecodeBase=false specDecodeType=0 loraRank=0 }
+[00:48:22.416] [INFO] [benchLogger.cpp:564:logBenchConfig] Bench Config:
+[00:48:22.416] [INFO] [benchLogger.cpp:565:logBenchConfig]   Mode: prefill
+[00:48:22.416] [INFO] [benchLogger.cpp:566:logBenchConfig]   Batch Size: 1
+[00:48:22.416] [INFO] [benchLogger.cpp:567:logBenchConfig]   Iterations: 10
+[00:48:22.416] [INFO] [benchLogger.cpp:568:logBenchConfig]   Seed: 0
+[00:48:22.416] [INFO] [benchLogger.cpp:572:logBenchConfig]   Input Len: 128
+[00:48:22.416] [INFO] [benchLogger.cpp:573:logBenchConfig]   Reuse KV Len: 0
+[00:48:22.416] [INFO] [llm_bench.cpp:873:main] Prefill mode: InputLen=128, ReuseKVLen=0
+[00:48:22.416] [INFO] [benchRunner.h:97:runWarmupLoop] === Prefill Warmup (3 iterations) ===
+[00:48:22.776] [INFO] [benchRunner.h:169:runRepeatedE2ETiming] === Prefill E2E Timing (10 iterations) ===
+[00:48:23.863] [INFO] [benchRunner.h:201:runRepeatedE2ETiming] Prefill E2E Time: 108.5745 +/- 3.4994 ms
+[00:48:23.863] [INFO] [benchLogger.cpp:601:logResultsSummary] === Results Summary ===
+[00:48:23.863] [INFO] [benchLogger.cpp:602:logResultsSummary] Mode: prefill
+[00:48:23.863] [INFO] [benchLogger.cpp:603:logResultsSummary] Batch Size: 1
+[00:48:23.863] [INFO] [benchLogger.cpp:604:logResultsSummary] Iterations: 10
+[00:48:23.863] [INFO] [benchLogger.cpp:637:logResultsSummary] 
+[00:48:23.863] [INFO] [benchLogger.cpp:638:logResultsSummary] E2E Time (actual performance): 108.5745 ms
+[00:48:23.863] [INFO] [benchLogger.cpp:643:logResultsSummary] InputLen: 128, ReuseKVLen: 0, ContextLen: 128
+[00:48:23.863] [INFO] [benchLogger.cpp:645:logResultsSummary] Tokens/sec (E2E): 1178.9

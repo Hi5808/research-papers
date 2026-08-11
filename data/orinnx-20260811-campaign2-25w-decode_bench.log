@@ -1,0 +1,50 @@
+[01:03:02.887] [INFO] [llm_bench.cpp:570:main] === LLM Profile Benchmark ===
+[01:03:02.887] [INFO] [llm_bench.cpp:571:main] Mode: decode
+[01:03:02.887] [INFO] [trtUtils.h:66:loadEdgellmPluginLib] EDGELLM_PLUGIN_PATH: /home/orinnx/TensorRT-Edge-LLM/build/libNvInfer_edgellm_plugin.so
+[01:03:02.968] [INFO] [llm_bench.cpp:585:main] Layer profiling disabled from startup. E2E timing only.
+[01:03:02.968] [INFO] [llm_bench.cpp:593:main] Output CSV files will be saved to: /home/orinnx/campaign2/25w
+[01:03:02.968] [INFO] [llmEngineConfig.cpp:462:parseEngineConfig] reading /home/orinnx/tensorrt-edgellm-workspace/Qwen3-4B-Instruct-2507/engine/config.json
+[01:03:02.968] [WARNING] [version.cpp:103:checkVersion] Model version 0.8.0 does not match runtime version 0.9.1. Consider re-exporting or re-building.
+[01:03:02.969] [INFO] [llmRuntimeUtils.cpp:272:collectRopeConfig] Collected rope config: RopeConfig:  type: Default  rotaryScale: 1  rotaryTheta: 5e+06  partialRotaryFactor: 1  maxPositionEmbeddings: 262144
+[01:03:02.969] [INFO] [llmEngineConfig.cpp:626:parseEngineConfig] LLMEngineConfig{ hiddenSize=2560 vocabSize=151936 outputVocabSize=151936 numDecoderLayers=36 numAttentionLayers=36 numKVHeads=8 headDim=128 rotaryDim=128 maxBatch=1 maxInputLen=512 maxKVCapacity=1024 pleEnabled=false numPleInputs=0 pleHiddenSize=0 isSpecDecodeBase=false specDecodeType=0 loraRank=0 }
+[01:03:02.969] [INFO] [engineExecutor.cpp:77:EngineExecutor] loading engine file: /home/orinnx/tensorrt-edgellm-workspace/Qwen3-4B-Instruct-2507/engine/llm.engine
+[01:03:02.991] [WARNING] [TensorRT] Using an engine plan file across different models of devices is not supported and is likely to affect performance or even cause errors or deadlock.
+[01:03:03.822] [INFO] [TensorRT] [MS] Running engine with multi stream info
+[01:03:03.822] [INFO] [TensorRT] [MS] Number of aux streams is 1
+[01:03:03.822] [INFO] [TensorRT] [MS] Number of total worker streams is 2
+[01:03:03.822] [INFO] [TensorRT] [MS] The main stream provided by execute/enqueue calls is the first worker stream
+[01:03:05.274] [INFO] [TensorRT] [MemUsageChange] TensorRT-managed allocation in IExecutionContext creation: CPU +0, GPU +0, now: CPU 0, GPU 2529 (MiB)
+[01:03:05.274] [INFO] [trtUtils.cpp:369:setNonBlockingAuxStreams] configured 1 non-blocking auxiliary stream(s) for execution context
+[01:03:05.274] [INFO] [engineExecutor.cpp:101:EngineExecutor] engine loaded successfully (78 I/O tensors)
+[01:03:05.274] [INFO] [llm_bench.cpp:764:main] EngineExecutor loaded from /home/orinnx/tensorrt-edgellm-workspace/Qwen3-4B-Instruct-2507/engine/llm.engine
+[01:03:05.310] [INFO] [ropeCache.cpp:109:getOrCreate] RopeCache: creating new entry (rotaryDim=128, maxSeqLen=1024)
+[01:03:05.382] [INFO] [llm_bench.cpp:818:main] Engine config:
+LLMEngineConfig{ hiddenSize=2560 vocabSize=151936 outputVocabSize=151936 numDecoderLayers=36 numAttentionLayers=36 numKVHeads=8 headDim=128 rotaryDim=128 maxBatch=1 maxInputLen=512 maxKVCapacity=1024 pleEnabled=false numPleInputs=0 pleHiddenSize=0 isSpecDecodeBase=false specDecodeType=0 loraRank=0 }
+[01:03:05.390] [WARNING] [TensorRT] Using an engine plan file across different models of devices is not supported and is likely to affect performance or even cause errors or deadlock.
+[01:03:06.479] [INFO] [benchLogger.cpp:564:logBenchConfig] Bench Config:
+[01:03:06.479] [INFO] [benchLogger.cpp:565:logBenchConfig]   Mode: decode
+[01:03:06.479] [INFO] [benchLogger.cpp:566:logBenchConfig]   Batch Size: 1
+[01:03:06.479] [INFO] [benchLogger.cpp:567:logBenchConfig]   Iterations: 500
+[01:03:06.479] [INFO] [benchLogger.cpp:568:logBenchConfig]   Seed: 0
+[01:03:06.479] [INFO] [benchLogger.cpp:576:logBenchConfig]   Past KV Len: 128
+[01:03:06.479] [INFO] [benchLogger.cpp:577:logBenchConfig]   OSL: 1
+[01:03:06.479] [INFO] [llm_bench.cpp:912:main] Decode mode: PastKVLen=128
+[01:03:06.479] [INFO] [llm_bench.cpp:916:main] OSL=1: will run 1 decode steps for E2E timing
+[01:03:06.479] [INFO] [llm_bench.cpp:917:main] CUDA graph enabled
+[01:03:06.479] [INFO] [benchRunner.h:97:runWarmupLoop] === Decode Warmup (3 iterations) ===
+[01:03:06.480] [INFO] [TensorRT] Switching optimization profile from: 0 to 1. Please ensure there are no enqueued operations pending in this context prior to switching profiles
+[01:03:07.488] [INFO] [benchRunner.h:157:runRepeatedE2ETiming] === Capturing CUDA Graph for Decode ===
+[01:03:07.581] [INFO] [engineExecutor.cpp:287:captureGraph] captured graph (hash=0xb943475e64ffe2b1)
+[01:03:07.581] [INFO] [benchRunner.h:161:runRepeatedE2ETiming] CUDA graph captured successfully.
+[01:03:07.581] [INFO] [benchRunner.h:169:runRepeatedE2ETiming] === Decode E2E Timing (500 iterations) ===
+[01:03:43.950] [INFO] [benchRunner.h:201:runRepeatedE2ETiming] Decode E2E Time: 72.6670 +/- 0.0495 ms
+[01:03:43.950] [INFO] [benchLogger.cpp:503:writeE2ECsv] E2E timing CSV saved to: /home/orinnx/campaign2/25w/e2e_decode_pastkvlen128.csv
+[01:03:43.950] [INFO] [benchLogger.cpp:601:logResultsSummary] === Results Summary ===
+[01:03:43.950] [INFO] [benchLogger.cpp:602:logResultsSummary] Mode: decode
+[01:03:43.950] [INFO] [benchLogger.cpp:603:logResultsSummary] Batch Size: 1
+[01:03:43.950] [INFO] [benchLogger.cpp:604:logResultsSummary] Iterations: 500
+[01:03:43.950] [INFO] [benchLogger.cpp:637:logResultsSummary] 
+[01:03:43.950] [INFO] [benchLogger.cpp:638:logResultsSummary] E2E Time (actual performance): 72.6670 ms
+[01:03:43.950] [INFO] [benchLogger.cpp:650:logResultsSummary] PastKVLen: 128, OSL: 1
+[01:03:43.950] [INFO] [benchLogger.cpp:651:logResultsSummary] Tokens/sec (E2E): 13.8
+[01:03:43.950] [INFO] [llm_bench.cpp:1183:main] Output CSV files saved to: /home/orinnx/campaign2/25w

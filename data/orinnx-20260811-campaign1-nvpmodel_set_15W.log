@@ -1,0 +1,4 @@
+NVPM WARN: Golden image context is already created
+NVPM WARN: Reboot required for changing to this power mode: 2
+NVPM WARN: DO YOU WANT TO REBOOT NOW? enter YES/yes to confirm:
+NVPM ERROR: optMask is 1, no request for power mode

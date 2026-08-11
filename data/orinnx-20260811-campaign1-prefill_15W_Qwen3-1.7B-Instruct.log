@@ -1,0 +1,43 @@
+[00:56:59.357] [INFO] [llm_bench.cpp:570:main] === LLM Profile Benchmark ===
+[00:56:59.358] [INFO] [llm_bench.cpp:571:main] Mode: prefill
+[00:56:59.358] [INFO] [trtUtils.h:66:loadEdgellmPluginLib] EDGELLM_PLUGIN_PATH: /home/orinnx/TensorRT-Edge-LLM/build/libNvInfer_edgellm_plugin.so
+[00:56:59.431] [INFO] [llm_bench.cpp:585:main] Layer profiling disabled from startup. E2E timing only.
+[00:56:59.431] [INFO] [llmEngineConfig.cpp:462:parseEngineConfig] reading /home/orinnx/tensorrt-edgellm-workspace/Qwen3-1.7B-Instruct/engine/config.json
+[00:56:59.431] [WARNING] [version.cpp:103:checkVersion] Model version 0.8.0 does not match runtime version 0.9.1. Consider re-exporting or re-building.
+[00:56:59.431] [INFO] [llmRuntimeUtils.cpp:272:collectRopeConfig] Collected rope config: RopeConfig:  type: Default  rotaryScale: 1  rotaryTheta: 1e+06  partialRotaryFactor: 1  maxPositionEmbeddings: 40960
+[00:56:59.432] [INFO] [llmEngineConfig.cpp:626:parseEngineConfig] LLMEngineConfig{ hiddenSize=2048 vocabSize=151936 outputVocabSize=151936 numDecoderLayers=28 numAttentionLayers=28 numKVHeads=8 headDim=128 rotaryDim=128 maxBatch=1 maxInputLen=512 maxKVCapacity=1024 pleEnabled=false numPleInputs=0 pleHiddenSize=0 isSpecDecodeBase=false specDecodeType=0 loraRank=0 }
+[00:56:59.432] [INFO] [engineExecutor.cpp:77:EngineExecutor] loading engine file: /home/orinnx/tensorrt-edgellm-workspace/Qwen3-1.7B-Instruct/engine/llm.engine
+[00:56:59.451] [WARNING] [TensorRT] The current device only supports 4 multiprocessors but the engine file requires 8. Deadlocking is likely.
+[00:56:59.452] [WARNING] [TensorRT] Using an engine plan file across different models of devices is not supported and is likely to affect performance or even cause errors or deadlock.
+[00:56:59.830] [INFO] [TensorRT] [MS] Running engine with multi stream info
+[00:56:59.830] [INFO] [TensorRT] [MS] Number of aux streams is 1
+[00:56:59.830] [INFO] [TensorRT] [MS] Number of total worker streams is 2
+[00:56:59.830] [INFO] [TensorRT] [MS] The main stream provided by execute/enqueue calls is the first worker stream
+[00:57:00.857] [INFO] [TensorRT] [MemUsageChange] TensorRT-managed allocation in IExecutionContext creation: CPU +0, GPU +0, now: CPU 0, GPU 1287 (MiB)
+[00:57:00.857] [INFO] [trtUtils.cpp:369:setNonBlockingAuxStreams] configured 1 non-blocking auxiliary stream(s) for execution context
+[00:57:00.857] [INFO] [engineExecutor.cpp:101:EngineExecutor] engine loaded successfully (62 I/O tensors)
+[00:57:00.857] [INFO] [llm_bench.cpp:764:main] EngineExecutor loaded from /home/orinnx/tensorrt-edgellm-workspace/Qwen3-1.7B-Instruct/engine/llm.engine
+[00:57:00.864] [INFO] [ropeCache.cpp:109:getOrCreate] RopeCache: creating new entry (rotaryDim=128, maxSeqLen=1024)
+[00:57:00.927] [INFO] [llm_bench.cpp:818:main] Engine config:
+LLMEngineConfig{ hiddenSize=2048 vocabSize=151936 outputVocabSize=151936 numDecoderLayers=28 numAttentionLayers=28 numKVHeads=8 headDim=128 rotaryDim=128 maxBatch=1 maxInputLen=512 maxKVCapacity=1024 pleEnabled=false numPleInputs=0 pleHiddenSize=0 isSpecDecodeBase=false specDecodeType=0 loraRank=0 }
+[00:57:00.931] [WARNING] [TensorRT] The current device only supports 4 multiprocessors but the engine file requires 8. Deadlocking is likely.
+[00:57:00.931] [WARNING] [TensorRT] Using an engine plan file across different models of devices is not supported and is likely to affect performance or even cause errors or deadlock.
+[00:57:01.434] [INFO] [benchLogger.cpp:564:logBenchConfig] Bench Config:
+[00:57:01.434] [INFO] [benchLogger.cpp:565:logBenchConfig]   Mode: prefill
+[00:57:01.434] [INFO] [benchLogger.cpp:566:logBenchConfig]   Batch Size: 1
+[00:57:01.434] [INFO] [benchLogger.cpp:567:logBenchConfig]   Iterations: 10
+[00:57:01.434] [INFO] [benchLogger.cpp:568:logBenchConfig]   Seed: 0
+[00:57:01.434] [INFO] [benchLogger.cpp:572:logBenchConfig]   Input Len: 128
+[00:57:01.434] [INFO] [benchLogger.cpp:573:logBenchConfig]   Reuse KV Len: 0
+[00:57:01.434] [INFO] [llm_bench.cpp:873:main] Prefill mode: InputLen=128, ReuseKVLen=0
+[00:57:01.434] [INFO] [benchRunner.h:97:runWarmupLoop] === Prefill Warmup (3 iterations) ===
+[00:57:01.923] [INFO] [benchRunner.h:169:runRepeatedE2ETiming] === Prefill E2E Timing (10 iterations) ===
+[00:57:03.380] [INFO] [benchRunner.h:201:runRepeatedE2ETiming] Prefill E2E Time: 145.6772 +/- 0.0626 ms
+[00:57:03.380] [INFO] [benchLogger.cpp:601:logResultsSummary] === Results Summary ===
+[00:57:03.380] [INFO] [benchLogger.cpp:602:logResultsSummary] Mode: prefill
+[00:57:03.380] [INFO] [benchLogger.cpp:603:logResultsSummary] Batch Size: 1
+[00:57:03.380] [INFO] [benchLogger.cpp:604:logResultsSummary] Iterations: 10
+[00:57:03.380] [INFO] [benchLogger.cpp:637:logResultsSummary] 
+[00:57:03.380] [INFO] [benchLogger.cpp:638:logResultsSummary] E2E Time (actual performance): 145.6772 ms
+[00:57:03.380] [INFO] [benchLogger.cpp:643:logResultsSummary] InputLen: 128, ReuseKVLen: 0, ContextLen: 128
+[00:57:03.380] [INFO] [benchLogger.cpp:645:logResultsSummary] Tokens/sec (E2E): 878.7
