@@ -1,13 +1,16 @@
 # Desktop Strip and Performance Tuning on Jetson Orin NX 16GB: Reproducing the Orin Nano Result on a Different Module
 
-**Platform:** Seeed Studio reComputer J401 — NVIDIA Jetson Orin NX 16GB (module P3767-300) on the same J401 carrier used for the Orin Nano study
+**Platform:** Seeed Studio reComputer J4012 — NVIDIA Jetson Orin NX 16GB (module P3767-300) on a J401 carrier board, same carrier family used for the Orin Nano study. The reComputer J4012 designation matters for this paper's thermal and power-delivery findings: it identifies the specific enclosure and cooling solution these results were measured in, which is not interchangeable with an NVIDIA reference devkit or a different reComputer SKU on the same carrier.
 **Software stack:** JetPack 7.2, L4T R39.2.0, CUDA 13.2, TensorRT 10.16.2.10, Ubuntu 24.04.4 LTS
 **Date:** August 2026
 
 > **Platform identification note.** As with the Orin Nano unit in prior papers,
 > the device tree `model` string reads `NVIDIA Jetson Orin NX Engineering
 > Reference Developer Kit Super`, which is generic BSP text, not a real devkit
-> identifier — this is a reComputer J401 carrier. Confirmed via
+> identifier — this is a Seeed Studio **reComputer J4012** on a J401 carrier
+> board (the carrier designation and the reComputer product SKU are distinct;
+> J401 is the carrier, J4012 is the enclosed product this paper's thermal and
+> power results were actually measured in). Confirmed via
 > `/etc/nv_boot_control.conf`:
 > ```
 > TNSPEC 3767-300-0000-H.2-1-0-recomputer-orin-j401-
@@ -16,7 +19,10 @@
 > for the Orin Nano used in the earlier strip/tune and fan-curve papers. Both
 > modules share the P3767 family and, notably, the **same fan config filename**
 > (`nvfancontrol_p3767_0000.conf`) — confirming the earlier finding that this
-> filename is not SKU-specific.
+> filename is not SKU-specific. The reComputer J4012 enclosure (case, stock
+> heatsink+fan, airflow path) is what §7's power-ceiling and external-cooling
+> results are specific to — they do not transfer to a bare module, an NVIDIA
+> reference devkit, or a different reComputer SKU on the same J401 carrier.
 
 ## Abstract
 
@@ -279,6 +285,7 @@ did not get there, across five independent workload combinations.**
 | 4B GPU load first, then CPU cores staged one at a time (90s hold) | 34.3 W | 87.3 °C |
 | CPU load first (all 8 cores), then 2 concurrent prefill + 2 decode streams slammed on | crashed (SIGABRT), not comparable | — |
 | CPU load first (all 8 cores), then single prefill + decode stream slammed on | 32.5 W | 74.3 °C |
+| Staged GPU-first loading, **with external fan** supplementing stock cooling | 34.07 W | 76.2 °C |
 
 Every combination attempted — from a pure compute kernel to a 4B-parameter
 model under combined CPU and tensor-core load — converged on the same
@@ -345,15 +352,37 @@ result obtained across eight workload/ordering combinations tested in this
 study (17.7-34.3 W total range), but did not close the remaining gap to the
 nameplate figure.
 
+**A final test isolated whether thermal throttling explains the ceiling, and
+the answer is no.** The reComputer J4012's stock cooling was supplemented
+with an external fan blowing directly on the enclosure, and the winning
+staged-loading test (§7, GPU load first, CPU cores added one at a time, 90s
+hold) was repeated identically under this added cooling. Peak junction
+temperature dropped substantially — **76.2 °C vs. 87.25 °C** for the
+otherwise-identical no-external-fan run, an 11 °C reduction — but peak power
+draw did not move: **34.07 W**, statistically indistinguishable from the
+34.2-34.3 W measured without external cooling. If the ~34 W plateau were a
+thermal-throttling response, removing 11 °C of headroom should have let the
+board draw measurably more power before hitting its trigger; it did not.
+This rules out thermal throttling as this study's explanation for the power
+ceiling and points instead toward a **board-level power-delivery limit**
+(VRM or input-rail current cap specific to the reComputer J4012's design) as
+the more likely cause — distinct from, and better supported by evidence
+than, the thermal-throttling explanation offered in the NVIDIA forum thread
+cited earlier in this section, which was not itself tested under controlled
+cooling. This finding is specific to the J4012 enclosure measured here; it
+does not establish whether the same ceiling exists on a bare module or a
+different carrier's power-delivery design.
+
 Readers should treat 34.3 W as this board's practical power ceiling under
 the workloads and staging technique available to this study, not 40 W — the
 mode name describes an allowed cap under `MAXN_SUPER`, not a draw this study
 was able to demonstrate or reliably reach, even applying NVIDIA's own
-documented guidance for approaching it.
+documented guidance for approaching it, and not a draw limited by heat
+under this study's cooling conditions.
 
 ## Evidence
 
-Raw logs for every step in this paper are in `data/`, prefixed `orinnx-20260810-`:
+Raw logs for every step in this paper are in `data/`, prefixed `orinnx-20260810-` (all files except the final external-fan test, which is `orinnx-20260811-`, run the following day):
 - `strip-dryrun.log`, `strip-removal.log`, `strip-autoremove.log` — package removal
 - `system-state-after.log` — post-tuning `nvpmodel`/`jetson_clocks`/systemd snapshot
 - `engine-build.log` — corrected TensorRT engine build (with the `EDGELLM_PLUGIN_PATH` fix)
@@ -369,3 +398,4 @@ Raw logs for every step in this paper are in `data/`, prefixed `orinnx-20260810-
 - `tegrastats-40w-staged.csv` — GPU load first, then CPU cores staged one at a time, 20s hold (34.2W)
 - `tegrastats-40w-staged-extended.csv` — same staging technique, 90s hold (34.3W, 87.3°C)
 - `tegrastats-40w-reverse-order.csv` — CPU loaded first, single GPU stream slammed on top afterward (32.5W, worse than staged)
+- `tegrastats-40w-external-fan.csv` — staged loading technique repeated with an external fan supplementing stock cooling (34.07W at 76.2°C — power unchanged despite 11°C cooler, ruling out thermal throttling)
