@@ -26,7 +26,7 @@
 
 ## Abstract
 
-A prior study on an Orin Nano 8GB (same J401 carrier) established that stripping desktop packages, locking clocks via `jetson_clocks`, switching to `MAXN_SUPER` power mode, and applying an aggressive fan curve produced an 8.9x boot-time improvement with no measured throttling under sustained inference load. This paper reproduces that exact procedure — the same 135-package removal batch, the same systemd persistence pattern, the same `max65` fan-margin profile — on an Orin NX 16GB unit, to test whether the methodology transfers across modules in the same family rather than being an artifact of one board. It largely does, with one required correction: **`nvpmodel` mode indices are not portable across modules in the same family** — `MAXN_SUPER` is mode 2 on this Orin Nano SKU but mode 0 on this Orin NX SKU, and applying the Nano's mode number verbatim would have silently set the wrong power profile. Inference throughput on Qwen3-1.7B-Instruct came out 35% higher on prefill (memory-bandwidth- and compute-bound) and statistically unchanged on decode (2732.9 vs 2025 tok/s prefill; 63.5 vs 62.2 tok/s decode), consistent with the NX's higher clocks and larger core count but similar per-token memory-bandwidth ceiling. Sustained decode load pushed junction temperature past the Nano's 65 °C fan-trigger threshold (peak 69.6 °C at 26 W) — **but §6 found this ran on a stale fan profile**, because `nvfancontrol.service` does not hot-reload its config and had not been restarted since the `max65` profile was written. A follow-up combined CPU+GPU stress test caught this, and after restarting the service the curve was confirmed live and working (PWM 0→255 at the 65 °C crossing). That same follow-up also found the module's true power ceiling is higher than a naive compute-only stress test suggests: it peaked at only 17.7W against the LLM benchmark's 26W, reproducing a finding from the companion Nano fan-curve paper that SM occupancy alone does not reach the module's real power envelope — tensor-core and DRAM-bandwidth-heavy workloads do. See §6 for the full correction.
+A prior study on an Orin Nano 8GB (same J401 carrier) established that stripping desktop packages, locking clocks via `jetson_clocks`, switching to `MAXN_SUPER` power mode, and applying an aggressive fan curve produced an 8.9x boot-time improvement with no measured throttling under sustained inference load. This paper reproduces that exact procedure — the same 135-package removal batch, the same systemd persistence pattern, the same `max65` fan-margin profile — on an Orin NX 16GB unit, to test whether the methodology transfers across modules in the same family rather than being an artifact of one board. It largely does, with one required correction: **`nvpmodel` mode indices are not portable across modules in the same family** — `MAXN_SUPER` is mode 2 on this Orin Nano SKU but mode 0 on this Orin NX SKU, and applying the Nano's mode number verbatim would have silently set the wrong power profile. Inference throughput on Qwen3-1.7B-Instruct came out 35% higher on prefill (memory-bandwidth- and compute-bound) and statistically unchanged on decode (2732.9 vs 2025 tok/s prefill; 63.5 vs 62.2 tok/s decode), consistent with the NX's higher clocks and larger core count but similar per-token memory-bandwidth ceiling. Sustained decode load pushed junction temperature past the Nano's 65 °C fan-trigger threshold (peak 69.6 °C at 26 W) — **but §6 found this ran on a stale fan profile**, because `nvfancontrol.service` does not hot-reload its config and had not been restarted since the `max65` profile was written. A follow-up combined CPU+GPU stress test caught this, and after restarting the service the curve was confirmed live and working (PWM 0→255 at the 65 °C crossing). That same follow-up also found the module's true power ceiling is higher than a naive compute-only stress test suggests: it peaked at only 17.7W against the LLM benchmark's 26W, reproducing a finding from the companion Nano fan-curve paper that SM occupancy alone does not reach the module's real power envelope — tensor-core and DRAM-bandwidth-heavy workloads do. A subsequent, dedicated investigation (§7) tried eight workload/ordering combinations to reach the 40W `MAXN_SUPER` nameplate figure, topping out at 34.3W using staged loading; an external-fan test then ruled out thermal throttling as the cause (power stayed flat despite an 11°C temperature drop); and reading the board's own hardware current-monitoring registers directly identified the actual mechanism — a Tegra over-current protection channel firing ~200 times per second during load, tied to an INA3221-configured current threshold on the input rail that corresponds almost exactly to 40W, with the underlying limit values living in NVIDIA's closed BPMP firmware rather than any user-adjustable setting. See §6-§7 for the full investigation.
 
 ## 1. Method: What Was Reproduced Verbatim vs. What Required Re-Derivation
 
@@ -379,6 +379,49 @@ mode name describes an allowed cap under `MAXN_SUPER`, not a draw this study
 was able to demonstrate or reliably reach, even applying NVIDIA's own
 documented guidance for approaching it, and not a draw limited by heat
 under this study's cooling conditions.
+
+**With thermal throttling ruled out, the board's own current-monitoring
+hardware was checked directly, and it identifies the actual mechanism.**
+This SoC exposes an onboard TI INA3221 power monitor (`/sys/class/hwmon`,
+`ina3221`) reading the `VDD_IN` input rail, and a separate Tegra hardware
+over-current protection block (`soctherm_oc`) with three throttle-enabled
+channels. Two readings from these together are conclusive:
+
+- `curr1_crit` (the INA3221's configured critical-current threshold on
+  `VDD_IN`) reads **7832 mA**, and `in1_input` (measured `VDD_IN` voltage)
+  reads **~5104 mV**. `7.832 A × 5.104 V ≈ 39.97 W` — the board's own
+  current-limit configuration corresponds almost exactly to the 40 W
+  nameplate figure. This threshold was never actually tripped during this
+  study's tests (peak observed current was 6.07 A of the 7.83 A limit,
+  during the highest-power run), so it is a monitoring/logging threshold,
+  not itself the active limiter.
+- The active limiter is `soctherm_oc`'s `oc3` channel, which counts hardware
+  over-current throttle events (`oc3_event_cnt`) and has throttling enabled
+  (`oc3_throt_en: 1`). A direct before/after test — reading the counter,
+  running a ~35-second combined CPU+GPU stress load, reading it again —
+  showed the counter climb from **237,999 to 245,157: 7,158 over-current
+  throttle events in ~35 seconds**, roughly 200 per second, confirmed live
+  and reproducible. This is a real-time, microsecond-scale hardware
+  current-limiting response, independent of temperature — consistent with
+  every result in this section: power plateaus at ~34 W regardless of how
+  load is staged, and external cooling does not move it, because the
+  limiter is not thermal.
+
+The OC threshold itself is not user-configurable from Linux on this board:
+`/sys/firmware/devicetree/base/soctherm-oc-event` resolves only to
+`nvidia,bpmp`, meaning the actual current-limit values live inside NVIDIA's
+closed BPMP (Boot and Power Management Processor) firmware — a separate
+co-processor that manages power sequencing and current limits below the
+kernel entirely, not a device-tree property or sysfs value exposed for
+adjustment. Combined with the INA3221 threshold sitting almost exactly at
+the 40 W nameplate figure, this reads as a deliberate hardware protection
+limit tied to the reComputer J4012's actual VRM/input-rail current
+capacity, not an arbitrary or conservative software default. This study
+deliberately did not attempt to raise or disable the OC threshold: doing so
+without knowing the physical current rating of this carrier's power
+components would risk exceeding real hardware limits (VRM overheating,
+brownout, or component damage) for an unverified performance gain, on
+different-in-kind risk than any test in this section prior to this point.
 
 ## Evidence
 
