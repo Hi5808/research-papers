@@ -1,0 +1,8 @@
+ggml_cuda_init: found 1 CUDA devices (Total VRAM: 15598 MiB):
+  Device 0: Orin, compute capability 8.7, VMM: yes, VRAM: 15598 MiB
+| model                          |       size |     params | backend    | ngl |            test |                  t/s |
+| ------------------------------ | ---------: | ---------: | ---------- | --: | --------------: | -------------------: |
+| qwen3 4B Q4_K - Medium         |   2.32 GiB |     4.02 B | CUDA       |  99 |           pp128 |       713.35 ± 16.42 |
+| qwen3 4B Q4_K - Medium         |   2.32 GiB |     4.02 B | CUDA       |  99 |           tg128 |         20.03 ± 0.03 |
+
+build: 7044859 (1)
