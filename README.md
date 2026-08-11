@@ -159,7 +159,7 @@ A full non-destructive characterization of a 1 TB SSD of unknown provenance, per
 
 ### 9. Desktop Strip and Performance Tuning on Jetson Orin NX 16GB: Reproducing the Orin Nano Result on a Different Module
 
-Reproduces the prior Orin Nano package-strip and clock/power/fan tuning study on an Orin NX 16GB unit on the same J401 carrier, testing whether the methodology transfers within the same module family rather than being an artifact of one board.
+Reproduces the prior Orin Nano package-strip and clock/power/fan tuning study on a reComputer J4012 (Orin NX 16GB) unit on the same J401 carrier family, testing whether the methodology transfers within the same module family rather than being an artifact of one board.
 
 **Key findings:**
 - The 135-package removal batch, the ported `max65` fan-curve profile, and both systemd drop-in fixes (`nvidia-cdi-refresh.service`, `nvpmodel.service`) all reproduced without modification
@@ -167,8 +167,9 @@ Reproduces the prior Orin Nano package-strip and clock/power/fan tuning study on
 - Qwen3-1.7B-Instruct prefill throughput came out 35% higher (2732.9 vs 2025 tok/s), consistent with the NX's higher clocks and larger core count; decode stayed flat (63.5 vs 62.2 tok/s), consistent with a memory-bandwidth-bound phase
 - **Correction caught by a follow-up stress test:** the sustained decode run's 69.6 °C peak did not actually exercise the `max65` fan curve — `nvfancontrol.service` doesn't hot-reload, and had not been restarted since the profile was written. After restarting it, live PWM polling confirmed the curve engages exactly as designed (0→255 at the 65 °C crossing)
 - That same follow-up found a naive CPU+GPU compute stress test undershoots the module's real power ceiling (17.7W vs the LLM benchmark's 26W) — SM occupancy alone doesn't reach the module's power envelope, reproducing a finding from the companion Nano fan-curve paper
+- **Eight workload/ordering combinations were tried to reach the 40W `MAXN_SUPER` nameplate figure — none did.** Best result was 34.3W using a staged GPU-first, CPU-cores-one-at-a-time technique matching NVIDIA staff's own documented guidance on a near-identical developer forum report. A final test supplemented stock cooling with an external fan: power stayed flat at 34.07W despite running 11°C cooler, ruling out thermal throttling and pointing to a board-level power-delivery limit instead
 
-**Platform:** reComputer J401 (Jetson Orin NX 16GB) | **Date:** August 2026
+**Platform:** reComputer J4012 (Jetson Orin NX 16GB, J401 carrier) | **Date:** August 2026
 
 [Read full paper →](research_9_orin_nx_strip_perf_tuning.md) · Raw data: [strip removal log](data/orinnx-20260810-strip-removal.log) · [sustained decode benchmark](data/orinnx-20260810-decode500-bench.log) · [tegrastats capture](data/orinnx-20260810-tegrastats-decode500.csv)
 
