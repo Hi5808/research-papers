@@ -264,20 +264,50 @@ that the declared ceiling is a config value rather than a hardware limit —
 now confirmed by bypassing the config layer entirely.
 
 **A dedicated attempt to reach the nominal 40W power mode's namesake wattage
-did not get there.** Combining `stress --cpu 8`, the `gpu_stress.cu` kernel,
-and a tight loop of TensorRT prefill benchmark calls (512-token input,
-tensor-core and memory-bandwidth heavy, unlike the plain FMA kernel) for a
-sustained 240-second run reached a peak of **32.8W** `VDD_IN` at 83 °C
-junction temperature — higher than either the LLM-benchmark-alone (26W) or
-compute-stress-alone (17.7W) figures from §4 and §6, but still short of the
-`40W` named power mode's nameplate figure, which is itself a cap under
-`MAXN_SUPER` rather than a target this board was observed to reach under any
-workload combination attempted here. Readers should treat 32.8W as the best
-lower-bound estimate of this board's peak draw from this study, not as a
-demonstrated ceiling — reaching or exceeding 40W would likely require a
-workload this study did not construct (e.g. multiple concurrent inference
-streams at higher batch size, which this study's single-batch engine build
-does not support).
+did not get there, across five independent workload combinations.**
+
+| Workload | Peak `VDD_IN` | Peak Tj |
+|---|---|---|
+| LLM decode benchmark alone (§4) | 26.0 W | 69.6 °C |
+| CPU+GPU compute stress alone (§6, `gpu_stress.cu` FMA kernel) | 17.7 W | 74.5 °C |
+| CPU stress + single 1.7B prefill loop | 32.8 W | 83 °C |
+| CPU stress + GPU burn kernel + single 1.7B prefill loop | 32.6 W | 83.1 °C |
+| CPU stress + 3 concurrent 1.7B prefill loops + burn kernel | 29.4 W | — |
+| CPU stress + 1.7B prefill loop + 1.7B decode loop | 33.0 W | 84.5 °C |
+| CPU stress + 4B prefill loop + 4B decode loop | 32.6 W | 82.9 °C |
+
+Every combination attempted — from a pure compute kernel to a 4B-parameter
+model under combined CPU and tensor-core load — converged on the same
+**29–33 W band**, regardless of how much heavier the compute got. Notably,
+adding *more* concurrent GPU work (three prefill streams instead of one)
+made peak power slightly *worse* (29.4 W vs. 32.8–33.0 W for a single
+stream), and moving from a 1.7B to a 4B model changed nothing (32.6 W either
+way) — this ceiling behaves like a board-level power limit rather than a
+workload-scaling one.
+
+This is not unique to this unit. An NVIDIA developer-forums thread on the
+same class of hardware (Orin NX 16GB devkit, Super Mode) reports the
+identical shape of result: full 8-core CPU load at 1984 MHz plus 99% GPU
+utilization peaked at 32–33 W, matching this study almost exactly. An NVIDIA
+staff response in that thread states directly: *"You cannot push over 40W.
+That will trigger throttling and even give you lower power consumption,"*
+and recommends staggering per-core CPU load rather than saturating all cores
+simultaneously — which, if accurate, would also explain why this study's
+three-concurrent-stream attempt performed *worse* than a single stream: an
+all-at-once load pattern may itself be the reason 40W isn't reached, not
+insufficient workload weight. A separate response in the same thread notes
+that some Orin NX carrier boards lack the high-voltage rail and thermal
+design needed for genuine 40W sustained operation even when JetPack reports
+Super Mode as active — a carrier-board hardware constraint this study cannot
+distinguish from a firmware-level one without access to NVIDIA's internal
+power-delivery documentation for the J401 carrier specifically.
+[Source: NVIDIA Developer Forums, "Orin NX 16GB on DevKit Super Mode power
+loading can't up to 40W"](https://forums.developer.nvidia.com/t/orin-nx-16gb-on-devkit-super-mode-power-loading-cant-up-to-40w/324604)
+
+Readers should treat 32–33 W as this board's practical power ceiling under
+ordinary inference and CPU workloads, not 40 W — the mode name describes an
+allowed cap under `MAXN_SUPER`, not a demonstrated or reliably reachable
+draw.
 
 ## Evidence
 
@@ -290,4 +320,7 @@ Raw logs for every step in this paper are in `data/`, prefixed `orinnx-20260810-
 - `decode500-bench.log`, `tegrastats-decode500.csv` — sustained 500-iteration decode run with concurrent power/thermal capture
 - `tegrastats-stress-precorrection.csv` — combined CPU+GPU stress before the `nvfancontrol` restart fix (fan not engaged, 74.5 °C peak)
 - `tegrastats-stress-postfanfix.csv` — same stress test after the fix (fan confirmed engaging, 71.75 °C peak)
-- `tegrastats-40w-attempt.csv` — combined CPU+GPU+tensor-core stress attempting to reach the 40W nameplate figure (peaked at 32.8W, 83 °C)
+- `tegrastats-40w-attempt.csv` — CPU stress + single 1.7B prefill loop + burn kernel (32.6-32.8W)
+- `tegrastats-40w-multistream.csv` — CPU stress + 3 concurrent 1.7B prefill loops + burn kernel (29.4W, worse than single-stream)
+- `tegrastats-40w-prefilldecode.csv` — CPU stress + 1.7B prefill loop + 1.7B decode loop (33.0W)
+- `tegrastats-40w-4b.csv` — CPU stress + 4B prefill loop + 4B decode loop (32.6W)
