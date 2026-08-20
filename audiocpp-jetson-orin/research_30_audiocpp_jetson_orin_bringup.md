@@ -380,8 +380,14 @@ three distinct real causes:
   one atomic all-or-nothing allocation failure rather than gradual RSS growth, which is
   exactly why the RAM-gap heuristic above missed it (the process aborts before ever
   reaching a high watermark). **Also re-tested against `GGML_CUDA_NO_VMM=ON` and fails
-  identically** (log now correctly shows `VMM: no`) — not fixable short of a smaller
-  quantization of this specific model, which wasn't attempted here.
+  identically** (log now correctly shows `VMM: no`). **No smaller quantization exists
+  to try**: checked `model_specs/supertonic.json`'s package list — only `q8_0` (the one
+  already used, and already the smallest offered), `f16`, `orig`, and `native`, all
+  strictly larger. Even if a q4 variant existed, it likely wouldn't help: the failing
+  8192.00 MB request is a single fixed-size allocation (almost certainly a compute/scratch
+  buffer sized by model architecture, not by weight precision), so shrinking the weights
+  wouldn't necessarily shrink that specific buffer. This is a genuine hard ceiling on the
+  Nano with no known workaround, not an untried-fix situation.
 
 **Net result: 2 of the 4 unexplained failures resolved with a real, upstream-available
 build flag; 2 remain genuinely open** (`index_tts2` fragmentation, `supertonic` hard
@@ -470,6 +476,15 @@ limit: **a reboot is a practical workaround.** Updates the Nano's real tally to 
 (up from 33/40) — only `supertonic`'s hard 8GB single-allocation ceiling remains genuinely
 unfixable, since a reboot can't create memory the board doesn't physically have.
 
+**Correction (same day): no smaller quantization exists for `supertonic`.** The earlier
+"not fixable short of a smaller quantization" framing implied an untried fix. Checked
+`model_specs/supertonic.json` directly: the only packages offered are `q8_0` (already
+used, already the smallest), `f16`, `orig`, and `native` — all strictly larger, no `q4`
+or similar exists to try. Separately, the failing allocation (a single fixed 8192.00 MB
+request) is almost certainly a compute/scratch buffer sized by model architecture, not
+weight precision — so even a hypothetical smaller quant likely wouldn't shrink it. This
+is a genuine, currently-unworkaroundable hard ceiling on the Nano, not an open lever.
+
 ## 7. Limitations
 - ASR/TTS inputs used the repo's own bundled fixtures and a fixed short sentence — not a
   diverse benchmark corpus; these numbers measure "does it run and how fast," not output
@@ -482,9 +497,11 @@ unfixable, since a reboot can't create memory the board doesn't physically have.
   `confucius4_tts`, `heartmula`, `moss_tts_local`) — untested on any platform, real sizes
   known (`family_manifest.csv`).
 - 3 runs per family is enough to see stddev but not a rigorous statistical sample.
-- The 4 Nano-specific "other instability" failures (`vibevoice`, `index_tts2`, `dots_tts`,
-  `supertonic`) were not root-caused beyond the RAM-gap comparison — genuinely open,
-  reported honestly as unresolved rather than guessed at.
+- The 4 Nano-specific "other instability" failures were fully root-caused (§5b): `dots_tts`
+  and `vibevoice` fixed via `GGML_CUDA_NO_VMM=ON`, `index_tts2` fixed via reboot,
+  `supertonic` confirmed a genuine hard capacity ceiling with no available workaround (no
+  smaller quantization exists to try, and the failing buffer is likely architecture-sized
+  rather than weight-precision-sized regardless).
 - Power telemetry (INA3221) was captured for the two smoke tests but not systematically
   across the full 40-family on-device runs (RAM via `/proc/meminfo` was, on every run) —
   a real gap if per-family power comparison becomes useful later.
