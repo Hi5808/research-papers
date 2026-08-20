@@ -250,6 +250,22 @@ Attempted to build a DLA-targeted TensorRT engine for a concurrent DLA+GPU utili
 
 ---
 
+### 30. Bringing audio.cpp to NVIDIA Jetson Orin: A Full-Catalog CUDA Bring-Up
+
+A maintainer asked r/JetsonNano for help getting their C++/GGML audio inference runtime (audio.cpp — TTS, ASR, voice conversion, music generation) running on Jetson Orin, with no Orin hardware of their own to test on. This paper documents the full bring-up: laptop-side prep on a discrete RTX 5060 (catching a real CMake architecture-precedence bug before it ever reached real hardware), then a complete 40-model-family benchmark run natively on both an Orin Nano 8GB and an Orin NX 16GB.
+
+**Key findings:**
+- Orin NX: 40/40 model families ran clean, zero failures — full parity with the discrete-GPU baseline
+- Orin Nano: 33/40 clean after root-causing all 9 initial failures down to real stderr — 5 are a straightforward 8GB capacity ceiling, 2 were fixed with a real, previously-unsurfaced ggml build flag (`-DGGML_CUDA_NO_VMM=ON`, closing a 32GB virtual-address-reservation failure last documented as a Jetson issue back in 2023), and 2 remain genuinely open (Tegra NVMAP allocator fragmentation; a single 8GB allocation request that exceeds the board's entire memory pool outright)
+- No garbled or corrupted output occurred anywhere, on either board, at any point — directly resolving the SM 8.7 CUDA-correctness risk flagged by prior community reports before ever touching real hardware
+- Findings and the working fix were reported upstream: [github.com/0xShug0/audio.cpp/issues/12](https://github.com/0xShug0/audio.cpp/issues/12#issuecomment-5359377035)
+
+**Platform:** reComputer J3011 (Jetson Orin Nano 8GB) + reComputer J4012 (Jetson Orin NX 16GB), JetPack 7.2 | **Date:** August 2026
+
+[Read full paper →](audiocpp-jetson-orin/research_30_audiocpp_jetson_orin_bringup.md) · Raw data: [RTX 5060 benchmark](audiocpp-jetson-orin/benchmark_results_rtx5060.csv) · [Orin Nano benchmark](audiocpp-jetson-orin/benchmark_results_orin.csv) · [Orin NX benchmark](audiocpp-jetson-orin/benchmark_results_orinnx.csv) · [family size manifest](audiocpp-jetson-orin/family_manifest.csv) · Scripts: [bring-up](audiocpp-jetson-orin/bringup.sh) · [telemetry wrapper](audiocpp-jetson-orin/run_with_telemetry.sh) · [Jetson benchmark runner](audiocpp-jetson-orin/jetson_bench_runner.py) · [laptop benchmark runner](audiocpp-jetson-orin/laptop_benchmark_runner.py)
+
+---
+
 ## About
 
 Papers 1-3 document research from production deployments on a Seeed Studio reComputer J3011 (Jetson Orin Nano 8GB on a J401 carrier), emphasizing practical systems-level challenges in edge AI deployment. Papers 4-5 document findings from building and evaluating a multi-model small-LLM fine-tuning pipeline, emphasizing failure modes that produce valid-looking but degraded artifacts, and the evaluation rigor required to trust A/B comparisons between fine-tuned models. Paper 6 documents hardware-level board bring-up, covering device-discovery methodology and firmware-flashing tool regressions under real-world host constraints. Paper 7 returns to the Jetson platform at the thermal and power-management layer, documenting a configuration-encoding trap and the measurement discipline required for trustworthy thermal benchmarks. Paper 8 extends that measurement discipline to storage, characterizing an unbranded NVMe SSD non-destructively on a live system and treating the instrument itself as something requiring validation. Paper 9 returns to the strip-and-tune methodology of the early Nano papers, testing it on an Orin NX 16GB to separate what generalizes across a module family from what is board-specific and must be re-derived. Papers 10-14 are a follow-on benchmark campaign on that same Orin NX unit, deliberately targeting gaps a literature check confirmed were open — power-mode efficiency, hardware throttling under real inference workloads, a matched-model inference-stack comparison, and DLA availability — with paper 10 as the overview and 11-14 as the individual campaigns, including one reported negative result.
