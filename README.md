@@ -256,7 +256,7 @@ A maintainer asked r/JetsonNano for help getting their C++/GGML audio inference 
 
 **Key findings:**
 - Orin NX: 40/40 model families ran clean, zero failures — full parity with the discrete-GPU baseline
-- Orin Nano: 33/40 clean after root-causing all 9 initial failures down to real stderr — 5 are a straightforward 8GB capacity ceiling, 2 were fixed with a real, previously-unsurfaced ggml build flag (`-DGGML_CUDA_NO_VMM=ON`, closing a 32GB virtual-address-reservation failure last documented as a Jetson issue back in 2023), and 2 remain genuinely open (Tegra NVMAP allocator fragmentation; a single 8GB allocation request that exceeds the board's entire memory pool outright)
+- Orin Nano: 34/40 clean after root-causing all 9 initial failures down to real stderr — 5 are a straightforward 8GB capacity ceiling, 2 were fixed with a real, previously-unsurfaced ggml build flag (`-DGGML_CUDA_NO_VMM=ON`, closing a 32GB virtual-address-reservation failure last documented as a Jetson issue back in 2023, confirmed to cost a real ~2% throughput regression on the 16GB NX where it isn't needed), 1 was fixed by a reboot (boot-persistent Tegra NVMAP allocator fragmentation), and 1 remains genuinely unfixable (a single 8GB allocation request that exceeds the board's entire memory pool outright)
 - No garbled or corrupted output occurred anywhere, on either board, at any point — directly resolving the SM 8.7 CUDA-correctness risk flagged by prior community reports before ever touching real hardware
 - Findings and the working fix were reported upstream: [github.com/0xShug0/audio.cpp/issues/12](https://github.com/0xShug0/audio.cpp/issues/12#issuecomment-5359377035)
 

@@ -68,16 +68,27 @@ echo "ggml commit (vendored): $(git log -1 --format=%h -- external/ggml 2>/dev/n
 # (1ull<<35) for its VMM pool, which fails on the Nano's smaller unified-memory address
 # space even though it never needs to be physically backed. Confirmed on real hardware
 # 2026-08-20: dots_tts and vibevoice both crash with VMM on, both run clean with it off.
-# Not needed on Orin NX 16GB (all families passed there with VMM on) -- only add this flag
-# if targeting the 8GB Nano, or leave it on unconditionally since it's a safe no-op
-# elsewhere (falls back to plain cudaMalloc, at worst a minor allocator-overhead cost).
+# NOT a safe no-op elsewhere, corrected 2026-08-20: A/B tested on Orin NX 16GB (bs_roformer,
+# 3 runs each way) -- 18.66s mean with VMM on vs 19.01s with it off, a real ~1.9% slowdown
+# (means differ by 2-4x each side's stdev, not noise). So: only pass this flag when
+# targeting the Nano specifically -- gate on total system RAM as a reliable proxy, since
+# the Nano and NX report distinctly different totals and there's no other clean signal
+# available before the CUDA device itself is queried.
+EXTRA_CUDA_FLAGS=()
+TOTAL_RAM_KB="$(awk '/MemTotal/{print $2}' /proc/meminfo)"
+if [ "${TOTAL_RAM_KB}" -lt 10000000 ]; then
+    echo "Detected ~8GB RAM (Nano-class board) -- adding -DGGML_CUDA_NO_VMM=ON"
+    EXTRA_CUDA_FLAGS+=("-DGGML_CUDA_NO_VMM=ON")
+else
+    echo "Detected >10GB RAM (NX-class board) -- leaving CUDA VMM enabled (no measured benefit disabling it here, and it costs ~2% throughput)"
+fi
 cmake -S . -B build \
     -DCMAKE_BUILD_TYPE=Release \
     -DENGINE_ENABLE_CUDA=ON \
     -DCUDAToolkit_ROOT="${CUDA_ROOT}" \
     -DCMAKE_CUDA_COMPILER="${CUDA_ROOT}/bin/nvcc" \
     -DCMAKE_CUDA_ARCHITECTURES="87-real" \
-    -DGGML_CUDA_NO_VMM=ON
+    "${EXTRA_CUDA_FLAGS[@]}"
 
 cmake --build build -j"$(nproc)" --target audiocpp_cli 2>&1 | tee "${WORKDIR}/build_$(date -u +%Y%m%dT%H%M%SZ).log"
 

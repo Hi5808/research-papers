@@ -21,9 +21,13 @@ failures honestly split into two distinct classes — 5 with a large RAM gap ver
 usage (a straightforward capacity ceiling) and 4 with only a small gap. Root-causing the
 4 found real, distinct causes: **2 (`dots_tts`, `vibevoice`) were fixed** by disabling
 ggml's CUDA VMM pool allocator (`-DGGML_CUDA_NO_VMM=ON`, a real upstream build flag that
-was never surfaced through audio.cpp's own option wrappers — now added to `bringup.sh`);
-2 remain genuinely open (`index_tts2`: Tegra NVMAP allocator fragmentation; `supertonic`:
-a hard-coded single 8GB allocation that exceeds the Nano's entire memory pool outright).
+was never surfaced through audio.cpp's own option wrappers — now added to `bringup.sh`,
+gated to Nano-class boards only after an A/B test found it costs a real ~2% throughput
+regression on the NX rather than being a free no-op); **1 (`index_tts2`) was fixed by a
+reboot** — isolated as boot-persistent Tegra NVMAP allocator fragmentation, confirmed by
+running it as the first CUDA workload after a clean reboot; **1 remains genuinely
+unfixable** (`supertonic`: a hard-coded single 8GB allocation that exceeds the Nano's
+entire memory pool outright, no reboot or flag changes it). **Final Nano tally: 34/40.**
 No garbled output occurred anywhere in either board's 40-family
 run; every failure was a clean non-zero exit or SIGABRT, never corrupted audio/text.
 
@@ -445,6 +449,26 @@ models available). Draft comment, updated with the full-catalog results:
 > to share the full write-up/raw data if useful.
 
 **Posted 2026-08-20**: https://github.com/0xShug0/audio.cpp/issues/12#issuecomment-5359377035
+
+**Correction (same day)**: the comment above speculated `GGML_CUDA_NO_VMM=ON` "looks like a
+safe no-op elsewhere" on the NX — that was untested at the time. A proper A/B test followed
+(NX, `bs_roformer`, 3 runs each way, `build/` vs. a fresh `build_novmm/`): **18.66s mean with
+VMM on vs. 19.01s with it off, a real ~1.9% slowdown** (means differ by 2-4x each side's
+stdev, not noise). Small, but real — the flag is *not* a free win on the NX, and `bringup.sh`
+now gates it on total system RAM (Nano-class boards only) rather than applying it
+unconditionally. A follow-up correction was posted to the same GitHub thread.
+
+**Follow-up finding (same day): `index_tts2` fixed by a reboot.** The comment above reported
+`index_tts2`'s `NvMapMemAllocInternalTagged` failure as "still open" — root cause unconfirmed
+between genuine fragmentation and something else. Isolated it properly: rebooted the Nano
+(clearing 14+ hours of accumulated kernel-level NVMAP allocator state from the original
+benchmark session) and ran `index_tts2` as the very first CUDA workload since boot, against
+the *original* VMM-enabled build (not the no-VMM one). **It succeeded** — real audio output,
+7385 MiB peak RAM (right at the edge of the Nano's ~7.5GB pool, but it completed). This
+confirms the failure was boot-persistent NVMAP allocator fragmentation, not a hard per-model
+limit: **a reboot is a practical workaround.** Updates the Nano's real tally to **34/40**
+(up from 33/40) — only `supertonic`'s hard 8GB single-allocation ceiling remains genuinely
+unfixable, since a reboot can't create memory the board doesn't physically have.
 
 ## 7. Limitations
 - ASR/TTS inputs used the repo's own bundled fixtures and a fixed short sentence — not a
